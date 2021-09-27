@@ -4,7 +4,7 @@ from find_endpoints import find_endpoint
 app = Flask(__name__)
 
 @app.route("/")
-def hello_world():
+def main():
     #return "<p>Hello, World!</p>"
     endpoints = find_endpoint("org.openstack.horizon")
     answer = ""
@@ -14,3 +14,6 @@ def hello_world():
         answer = answer + f"<p><a href=\"{endpoint}\">{endpoint}</a></p>"
 
     return answer
+
+if __name__ == "__main__":
+    main()
