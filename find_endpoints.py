@@ -77,7 +77,7 @@ def find_endpoints(service_type, production=True, monitored=True, site=None):
 def main():
     endpoints = find_endpoints("org.openstack.horizon")
     for site, service_type, endpoint in endpoints:
-        print(endpoint)
+        print(site, endpoint)
 
 
 if __name__ == "__main__":
