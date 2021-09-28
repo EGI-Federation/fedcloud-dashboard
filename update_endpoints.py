@@ -12,7 +12,7 @@ SENTINEL_FILE_NAME = "endpoints"
 SENTINEL_FILE_CHANGE_SECONDS = 600
 
 # sentinel file descriptor
-sentinel_file = Path(SENTINEL_FILE_NAME)
+sentinel_file = Path(Path.home() / SENTINEL_FILE_NAME)
 
 
 def update_endpoints():
