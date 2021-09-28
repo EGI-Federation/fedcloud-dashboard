@@ -1,19 +1,18 @@
 #!/usr/bin/env python
 
 import time
-import os
 from find_endpoints import find_endpoints
 from pathlib import Path
 
 # filename for the sentinel file
-SENTINEL_FILE_NAME = "endpoints"
+SENTINEL_FILE_NAME = "/tmp/horizonaggregator-endpoints"
 
 # number of seconds to wait until
 # we query again GOCDB
 SENTINEL_FILE_CHANGE_SECONDS = 600
 
 # sentinel file descriptor
-sentinel_file = Path(os.path.join('/tmp', SENTINEL_FILE_NAME))
+sentinel_file = Path(SENTINEL_FILE_NAME)
 
 
 def update_endpoints():
