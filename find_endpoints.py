@@ -32,7 +32,7 @@ def get_sites():
     return sites
 
 
-def find_endpoint(service_type, production=True, monitored=True, site=None):
+def find_endpoints(service_type, production=True, monitored=True, site=None):
     """
     Searching GOCDB for endpoints according to service types and status
     :param service_type:
@@ -75,7 +75,7 @@ def find_endpoint(service_type, production=True, monitored=True, site=None):
 
 
 def main():
-    endpoints = find_endpoint("org.openstack.horizon")
+    endpoints = find_endpoints("org.openstack.horizon")
     for site, service_type, endpoint in endpoints:
         print(endpoint)
 
