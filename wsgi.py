@@ -11,7 +11,7 @@ def main():
     for site, endpoint in endpoints:
         #print(endpoint)
         #answer = answer + f"<p>{endpoint}</p>"
-        answer = answer + f"<p>Site:{site}: <a href=\"{endpoint}\">{endpoint}</a></p>"
+        answer = answer + f"<p>{site}: <a href=\"{endpoint}\">{endpoint}</a></p>"
 
     return answer
 
