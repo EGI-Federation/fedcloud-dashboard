@@ -1,5 +1,5 @@
 from flask import Flask
-from update_endpoints import update_endpoints
+from update_endpoints import read_endpoints
 
 app = Flask(__name__)
 
