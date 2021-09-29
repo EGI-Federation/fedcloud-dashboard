@@ -1,0 +1,23 @@
+<!-- Adapted from https://github.com/EGI-Federation/egi-notebooks-monitoring/ -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">    
+    <title>EGI Cloud Compute Dashboard</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="py-3 text-center">
+        <img class="d-block mx-auto mb-4" src="{{ url_for('static', filename='egi.png') }}" alt="EGI logo" height="350">
+        <h1>EGI Cloud Compute Dashboard</h1>
+      </div>
+      {% for site, endpoint in endpoints %}
+      <p>{{ site }}: <a href="{{ endpoint }}">{{ endpoint }}</a></p>
+      {% endfor %}
+    </div>
+  </body>
+</html>

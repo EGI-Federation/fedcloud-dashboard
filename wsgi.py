@@ -1,19 +1,11 @@
-from flask import Flask
+from flask import Flask, render_template
 from update_endpoints import read_endpoints
 
 app = Flask(__name__)
 
 @app.route("/")
 def main():
-    #return "<p>Hello, World!</p>"
-    endpoints = read_endpoints()
-    answer = ""
-    for site, endpoint in endpoints:
-        #print(endpoint)
-        #answer = answer + f"<p>{endpoint}</p>"
-        answer = answer + f"<p>{site}: <a href=\"{endpoint}\">{endpoint}</a></p>"
-
-    return answer
+    return render_template("dashboard.html", endpoints=read_endpoints())
 
 if __name__ == "__main__":
     main()
