@@ -1,4 +1,6 @@
 # Log of changes
+## v0.0.4
+- Add first version of CSS.
 ## v0.0.3
 - Use a buffer (file on local disk) rather than querying GOCDB with every visit.
 ## v0.0.2
