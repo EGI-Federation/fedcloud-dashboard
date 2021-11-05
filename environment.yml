@@ -6,7 +6,7 @@ channels:
  - defaults
 
 dependencies:
- - python
+ - python 3.8.*
  - defusedxml
  - requests
  - flask
