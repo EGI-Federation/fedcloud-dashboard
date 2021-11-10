@@ -1,4 +1,6 @@
 # Log of changes
+## v0.0.5
+- Dockerise the deployment.
 ## v0.0.4
 - Add first version of CSS.
 ## v0.0.3
