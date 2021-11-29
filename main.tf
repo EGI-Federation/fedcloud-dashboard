@@ -6,7 +6,7 @@ resource "openstack_compute_instance_v2" "dashboard" {
   network {
     uuid = var.net_id
   }
-  security_groups = ["${openstack_compute_secgroup_v2.secgroup.name}"]
+  security_groups = [openstack_compute_secgroup_v2.secgroup.name]
 }
 
 resource "openstack_compute_secgroup_v2" "secgroup" {
@@ -33,6 +33,6 @@ resource "openstack_networking_floatingip_v2" "fip" {
 }
 
 resource "openstack_compute_floatingip_associate_v2" "fip" {
-  floating_ip = "${openstack_networking_floatingip_v2.fip.address}"
-  instance_id = "${openstack_compute_instance_v2.dashboard.id}"
+  floating_ip = openstack_networking_floatingip_v2.fip.address
+  instance_id = openstack_compute_instance_v2.dashboard.id
 }
