@@ -1,0 +1,51 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: yes
+  roles:
+  - role: 'grycap.docker'
+
+- hosts: localhost
+  connection: local
+  gather_facts: yes
+  tasks:
+  - name: Get dashboard repo
+    ansible.builtin.git:
+      repo: 'https://github.com/sebastian-luna-valero/horizon-aggregator.git'
+      dest: /horizon-aggregator
+
+  - name: Build docker container
+    docker_image:
+      build:
+        path: /horizon-aggregator/docker
+      name: horizon-aggregator
+      tag: latest
+      source: build
+
+  - name: service file
+    ansible.builtin.copy:
+      content: |
+        #
+        # This manages the cloudkeeper OS backend
+        #
+        [Unit]
+        Description=Dashboard
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        ExecStartPre=-/usr/bin/docker stop dashboard
+        ExecStartPre=-/usr/bin/docker rm -v dashboard
+        ExecStart=/usr/bin/docker run --name dashboard -v /horizon-aggregator/dashboard/:/var/www/html -v /horizon-aggregator/logs:/var/log/apache2 -p 80:80 -p 443:443 horizon-aggregator:latest
+        ExecStop=/usr/bin/docker stop dashboard
+
+        [Install]
+        WantedBy=multi-user.target
+      dest: /etc/systemd/system/dashboard.service
+
+  - name: Run, baby run
+    ansible.builtin.systemd:
+      name: dashboard.service
+      enabled: yes
+      state: started
+      daemon_reload: yes

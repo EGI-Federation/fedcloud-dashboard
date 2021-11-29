@@ -1,0 +1,9 @@
+---
+clouds:
+  # handling the terraform state at NCG-INGRID (IISAS does not have Object store)
+  backend:
+    site: NCG-INGRID-PT
+    vo: cloud.egi.eu
+  deploy:
+    site: IISAS-FedCloud 
+    vo: cloud.egi.eu
