@@ -48,4 +48,4 @@ comment_url=$(curl -X POST \
               jq -r .html_url)
 
 # This is here for possible future use
-echo $comment_url
+echo "$comment_url"
