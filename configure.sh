@@ -9,12 +9,12 @@ ansible-galaxy install grycap.docker
 
 if ansible-playbook playbook.yaml >ansible.log 2>&1 ; then
    status_summary="success"
-   color="#6DBF59"
-   header="Successful deployment :rocket:"
+   #color="#6DBF59"
+   #header="Successful deployment :rocket:"
 else
    status_summary="fail"
-   color="#EA4F47"
-   header="Failed deployment :boom:"
+   #color="#EA4F47"
+   #header="Failed deployment :boom:"
 fi
 
 GITHUB_COMMIT_URL="https://api.github.com/repos/EGI-Federation/fedcloud-dashboard/commits/$COMMIT_SHA/pulls"
@@ -46,3 +46,6 @@ comment_url=$(curl -X POST \
                 "$GITHUB_ISSUE_URL" \
                 --data @github_body.json | \
               jq -r .html_url)
+
+# This is here for possible future use
+echo $comment_url
