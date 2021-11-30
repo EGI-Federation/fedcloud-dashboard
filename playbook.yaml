@@ -11,16 +11,9 @@
   tasks:
   - name: Get dashboard repo
     ansible.builtin.git:
-      repo: 'https://github.com/sebastian-luna-valero/horizon-aggregator.git'
+      repo: 'https://github.com/enolfc/horizon-aggregator.git'
       dest: /horizon-aggregator
-
-  - name: Build docker container
-    docker_image:
-      build:
-        path: /horizon-aggregator/docker
-      name: horizon-aggregator
-      tag: latest
-      source: build
+      version: gunicorn
 
   - name: service file
     ansible.builtin.copy:
@@ -34,10 +27,11 @@
         Requires=docker.service
 
         [Service]
-        ExecStartPre=-/usr/bin/docker stop dashboard
-        ExecStartPre=-/usr/bin/docker rm -v dashboard
-        ExecStart=/usr/bin/docker run --name dashboard -v /horizon-aggregator/dashboard/:/var/www/html -v /horizon-aggregator/logs:/var/log/apache2 -p 80:80 -p 443:443 horizon-aggregator:latest
-        ExecStop=/usr/bin/docker stop dashboard
+        Type=oneshot
+        RemainAfterExit=true
+        WorkingDirectory=/horizon-aggregator
+        ExecStart=/usr/local/bin/docker-compose up -d --remove-orphans -e DASHBOARD_HOSTNAME="dashboard.test.fedcloud.eu"
+        ExecStop=/usr/local/bin/docker-compose down
 
         [Install]
         WantedBy=multi-user.target
