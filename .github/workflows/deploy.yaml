@@ -84,3 +84,15 @@ jobs:
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
         terraform apply -auto-approve -var-file=deploy.tfvars
+    - name: Get IP
+      id: public_ip
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        terraform output -raw public_ip -var-file=deploy.tfvars
+    - name: Update IP in DNS
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      env:
+        NSUPDATE_SECRET: ${{ secrets.NSUPDATE_SECRET }}
+      run: |
+        curl -u "horizon.vm.fedcloud.eu.:$NSUPDATE_SECRET" \
+             "https://nsupdate.fedcloud.eu/nic/update?myip=${{ steps.public_ip.outputs.stdout }}"

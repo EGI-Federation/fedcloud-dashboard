@@ -18,7 +18,7 @@
   - name: env file
     ansible.builtin.copy:
       content: |
-        DASHBOARD_HOSTNAME=dashboard.test.fedcloud.eu
+        DASHBOARD_HOSTNAME=horizon.vm.fedcloud.eu
       dest: /horizon-aggregator/.env
 
   - name: service file

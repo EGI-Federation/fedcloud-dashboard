@@ -36,3 +36,7 @@ resource "openstack_compute_floatingip_associate_v2" "fip" {
   floating_ip = openstack_networking_floatingip_v2.fip.address
   instance_id = openstack_compute_instance_v2.dashboard.id
 }
+
+output "public_ip" {
+  value = openstack_networking_floatingip_v2.fip.address
+}
