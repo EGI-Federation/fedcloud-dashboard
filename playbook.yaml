@@ -15,6 +15,12 @@
       dest: /horizon-aggregator
       version: gunicorn
 
+  - name: env file
+    ansible.builtin.copy:
+      content: |
+        DASHBOARD_HOSTNAME=dashboard.test.fedcloud.eu
+      dest: /horizon-aggregator/.env
+
   - name: service file
     ansible.builtin.copy:
       content: |
@@ -30,7 +36,7 @@
         Type=oneshot
         RemainAfterExit=true
         WorkingDirectory=/horizon-aggregator
-        ExecStart=/usr/local/bin/docker-compose up -d --remove-orphans -e DASHBOARD_HOSTNAME="dashboard.test.fedcloud.eu"
+        ExecStart=/usr/local/bin/docker-compose up -d --remove-orphans
         ExecStop=/usr/local/bin/docker-compose down
 
         [Install]
