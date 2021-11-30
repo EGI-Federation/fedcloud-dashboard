@@ -1,0 +1,98 @@
+---
+name: 'Deploy'
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup python
+      uses: actions/setup-python@v2
+    - name: Install environment
+      run: |
+        curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > jq
+        chmod +x jq
+        pip install yq git+https://github.com/tdviet/fedcloudclient.git
+        curl -L https://github.com/oidc-mytoken/client/releases/download/v0.3.0/mytoken_0.3.0_Linux_x86_64.tar.gz \
+          | tar -xzf -
+        mkdir ~/.mytoken
+        curl https://raw.githubusercontent.com/oidc-mytoken/client/master/config/example-config.yaml > ~/.mytoken/config.yaml
+    - name: Configure providers access
+      env:
+        MYTOKEN: ${{ secrets.MYTOKEN }}
+      run: |
+        PATH="$PWD:$PATH"
+        ./site-config.sh
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+    - name: Terraform Format
+      id: fmt
+      run: |
+        terraform fmt -check
+    - name: Terraform init
+      id: init
+      run: |
+        terraform init
+    - name: Adjust cloud-init file
+      run: |
+        sed -i -e "s/%TOKEN%/${{ secrets.GITHUB_TOKEN }}/" cloud-init.yaml
+        sed -i -e "s/%REF%/${{ github.sha }}/" cloud-init.yaml
+    - name: terraform plan
+      id: plan
+      if: github.event_name == 'pull_request'
+      run: |
+        terraform plan -no-color -var-file=deploy.tfvars
+      continue-on-error: true
+    - name: Update Pull Request
+      uses: actions/github-script@v5
+      if: github.event_name == 'pull_request'
+      env:
+        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+          <details><summary>Show Plan</summary>
+
+          \`\`\`
+          ${process.env.PLAN}
+          \`\`\`
+
+          </details>
+
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
+    - name: Terraform Plan Status
+      if: steps.plan.outcome == 'failure'
+      run: exit 1
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        terraform apply -auto-approve -var-file=deploy.tfvars
+    - name: Get IP
+      id: public_ip
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        terraform output -raw public_ip -var-file=deploy.tfvars
+    - name: Update IP in DNS
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      env:
+        NSUPDATE_SECRET: ${{ secrets.NSUPDATE_SECRET }}
+      run: |
+        curl -u "horizon.vm.fedcloud.eu.:$NSUPDATE_SECRET" \
+             "https://nsupdate.fedcloud.eu/nic/update?myip=${{ steps.public_ip.outputs.stdout }}"

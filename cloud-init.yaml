@@ -1,0 +1,33 @@
+#cloud-config
+---
+users:
+- name: egi
+  gecos: EGI
+  primary_group: egi
+  groups: users
+  shell: /bin/bash
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  ssh_import_id:
+  - gh:enolfc
+  - gh:gwarf
+  - gh:CatalinCondurache
+  - gh:sebastian-luna-valero
+
+packages:
+- git
+- ansible
+- jq
+
+write_files:
+- content: |
+    #!/bin/sh
+    set -e
+
+    mkdir -p /var/tmp/egi
+    cd /var/tmp/egi || exit
+
+    git clone -b deploy https://github.com/EGI-Federation/fedcloud-dashboard.git
+    cd fedcloud-dashboard
+    ./configure.sh %TOKEN% %REF%
+  path: /var/lib/cloud/scripts/per-boot/deploy.sh
+  permissions: '0755'

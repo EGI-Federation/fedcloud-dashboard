@@ -1,0 +1,51 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: yes
+  roles:
+  - role: 'grycap.docker'
+
+- hosts: localhost
+  connection: local
+  gather_facts: yes
+  tasks:
+  - name: Get dashboard repo
+    ansible.builtin.git:
+      repo: 'https://github.com/enolfc/horizon-aggregator.git'
+      dest: /horizon-aggregator
+      version: gunicorn
+
+  - name: env file
+    ansible.builtin.copy:
+      content: |
+        DASHBOARD_HOSTNAME=horizon.vm.fedcloud.eu
+      dest: /horizon-aggregator/.env
+
+  - name: service file
+    ansible.builtin.copy:
+      content: |
+        #
+        # This manages the cloudkeeper OS backend
+        #
+        [Unit]
+        Description=Dashboard
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=true
+        WorkingDirectory=/horizon-aggregator
+        ExecStart=/usr/local/bin/docker-compose up -d --remove-orphans
+        ExecStop=/usr/local/bin/docker-compose down
+
+        [Install]
+        WantedBy=multi-user.target
+      dest: /etc/systemd/system/dashboard.service
+
+  - name: Run, baby run
+    ansible.builtin.systemd:
+      name: dashboard.service
+      enabled: yes
+      state: started
+      daemon_reload: yes
