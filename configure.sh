@@ -9,7 +9,7 @@ SLACK_WEBHOOK_URL="$4"
 
 ansible-galaxy install grycap.docker
 
-if ansible-playbook -i playbook.yaml >ansible.log 2>&1 ; then
+if ansible-playbook playbook.yaml >ansible.log 2>&1 ; then
    status_summary="success"
    color="#6DBF59"
    header="Successful deployment :rocket:"
@@ -18,6 +18,10 @@ else
    color="#EA4F47"
    header="Failed deployment :boom:"
 fi
+
+echo "$status_summary"
+
+exit 0
 
 GITHUB_COMMIT_URL="https://api.github.com/repos/EGI-Federation/fedcloud-catchall-operations/commits/$COMMIT_SHA/pulls"
 
