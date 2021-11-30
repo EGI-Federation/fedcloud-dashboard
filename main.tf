@@ -1,12 +1,12 @@
 resource "openstack_compute_instance_v2" "dashboard" {
-  name            = "dashboard"
-  image_id        = var.image_id
-  flavor_id       = var.flavor_id
-  user_data       = file("cloud-init.yaml")
+  name      = "dashboard"
+  image_id  = var.image_id
+  flavor_id = var.flavor_id
+  user_data = file("cloud-init.yaml")
   network {
     uuid = var.net_id
   }
-  security_groups = [openstack_compute_secgroup_v2.secgroup.name]
+  security_groups = [openstack_compute_secgroup_v2.secgroup.name, "default"]
 }
 
 resource "openstack_compute_secgroup_v2" "secgroup" {
@@ -14,15 +14,15 @@ resource "openstack_compute_secgroup_v2" "secgroup" {
   description = "HTTP and HTTPS access"
 
   rule {
-    from_port   = 80 
+    from_port   = 80
     to_port     = 80
     ip_protocol = "tcp"
     cidr        = "0.0.0.0/0"
   }
 
   rule {
-    from_port   = 443 
-    to_port     = 443 
+    from_port   = 443
+    to_port     = 443
     ip_protocol = "tcp"
     cidr        = "0.0.0.0/0"
   }
