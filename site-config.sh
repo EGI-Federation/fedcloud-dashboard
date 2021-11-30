@@ -1,7 +1,6 @@
 #!/bin/sh
 
 set -e
-set -x
 
 # builds the clouds.yaml file needed for OpenStack clients
 # Reads from config.yaml the clouds to use
@@ -46,5 +45,3 @@ dump_config deploy \
 
 mv tmp-clouds.yaml clouds.yaml
 mkdir -p ~/.config/openstack
-
-exit 0
