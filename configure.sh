@@ -4,8 +4,6 @@ set -e
 
 OAUTH_TOKEN="$1"
 COMMIT_SHA="$2"
-SHORT_SHA="$3"
-SLACK_WEBHOOK_URL="$4"
 
 ansible-galaxy install grycap.docker
 
@@ -19,11 +17,7 @@ else
    header="Failed deployment :boom:"
 fi
 
-echo "$status_summary"
-
-exit 0
-
-GITHUB_COMMIT_URL="https://api.github.com/repos/EGI-Federation/fedcloud-catchall-operations/commits/$COMMIT_SHA/pulls"
+GITHUB_COMMIT_URL="https://api.github.com/repos/EGI-Federation/fedcloud-dashboard/commits/$COMMIT_SHA/pulls"
 
 # Find out PR we need to update
 ISSUE_NUMBER=$(curl \
@@ -31,7 +25,7 @@ ISSUE_NUMBER=$(curl \
                  -H "Accept: application/vnd.github.groot-preview+json" \
                  "$GITHUB_COMMIT_URL" | jq .[0].number)
 
-GITHUB_ISSUE_URL="https://api.github.com/repos/EGI-Federation/fedcloud-catchall-operations/issues/$ISSUE_NUMBER/comments"
+GITHUB_ISSUE_URL="https://api.github.com/repos/EGI-Federation/fedcloud-dashboard/issues/$ISSUE_NUMBER/comments"
 
 {
   echo "### Ansible deployment: \`$status_summary\`"
@@ -52,35 +46,3 @@ comment_url=$(curl -X POST \
                 "$GITHUB_ISSUE_URL" \
                 --data @github_body.json | \
               jq -r .html_url)
-
-cat > slack_body.json << EOF
-{
-  "attachments": [
-    {
-      "color": "$color",
-      "blocks": [
-        {
-          "type": "header",
-          "text": {
-            "type": "plain_text",
-            "text": "$header",
-            "emoji": true
-          }
-        },
-        {
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": "fedcloud-catchall-operations deployment was completed for <$comment_url| PR \`#$ISSUE_NUMBER\`> "
-          }
-        }
-      ]
-    }
-  ]
-}
-EOF
-
-# Let Slack know
-curl -X POST -H 'Content-type: application/json' \
-     --data @slack_body.json \
-     "$SLACK_WEBHOOK_URL"

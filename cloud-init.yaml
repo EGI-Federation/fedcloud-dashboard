@@ -28,6 +28,6 @@ write_files:
 
     git clone -b deploy https://github.com/EGI-Federation/fedcloud-dashboard.git
     cd fedcloud-dashboard
-    ./configure.sh 
+    ./configure.sh %TOKEN% %REF%
   path: /var/lib/cloud/scripts/per-boot/deploy.sh
   permissions: '0755'
