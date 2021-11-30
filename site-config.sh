@@ -5,7 +5,7 @@ set -e
 # builds the clouds.yaml file needed for OpenStack clients
 # Reads from config.yaml the clouds to use
 
-function dump_config() {
+dump_config() {
     # dumps a piece of yaml ready to be included in the
     # clouds.yaml Openstack client config
     cloud_name="$1"
@@ -16,7 +16,7 @@ function dump_config() {
                       --oidc-access-token "$oidc_token" \
                       --site "$site" --vo "$vo" -j \
                       | jq -r '.[0].Result.id')"
-    eval "$(fedcloud site show-project-id --site $site --vo $vo)"
+    eval "$(fedcloud site show-project-id --site "$site" --vo "$vo")"
     cat << EOF
   $cloud_name:
     auth_type: token
