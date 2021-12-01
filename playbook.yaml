@@ -1,10 +1,20 @@
 ---
 - hosts: all
+  tasks:
+  - name: Wait for ssh
+    # give it some time as the VM may take a while to start
+    wait_for_connection:
+      delay: 60
+      timeout: 600
+
+- hosts: all
+  become: yes
   gather_facts: yes
   roles:
   - role: 'grycap.docker'
 
 - hosts: all
+  become: yes
   gather_facts: yes
   tasks:
   - name: Get dashboard repo
