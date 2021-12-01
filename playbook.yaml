@@ -1,12 +1,10 @@
 ---
-- hosts: localhost
-  connection: local
+- hosts: all
   gather_facts: yes
   roles:
   - role: 'grycap.docker'
 
-- hosts: localhost
-  connection: local
+- hosts: all
   gather_facts: yes
   tasks:
   - name: Get dashboard repo
@@ -18,7 +16,7 @@
   - name: env file
     ansible.builtin.copy:
       content: |
-        DASHBOARD_HOSTNAME=horizon.vm.fedcloud.eu
+        DASHBOARD_HOSTNAME=dashboard.cloud.egi.eu
       dest: /horizon-aggregator/.env
 
   - name: service file
