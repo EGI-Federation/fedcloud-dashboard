@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 import time
-from find_endpoints import find_endpoints
 from pathlib import Path
+
+from find_endpoints import find_endpoints
 
 # filename for the sentinel file
 SENTINEL_FILE_NAME = "/tmp/horizonaggregator-endpoints"
