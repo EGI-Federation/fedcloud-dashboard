@@ -18,11 +18,11 @@
   become: yes
   gather_facts: yes
   tasks:
-  - name: Get dashboard repo
+  - name: Checkout repo at VM
     ansible.builtin.git:
-      repo: 'https://github.com/enolfc/horizon-aggregator.git'
+      repo: 'https://github.com/EGI-Foundation/fedcloud-dashboard.git'
+      version: {{ git_ref }}
       dest: /horizon-aggregator
-      version: gunicorn
 
   - name: env file
     ansible.builtin.copy:

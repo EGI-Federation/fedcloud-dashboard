@@ -104,4 +104,4 @@ jobs:
         SSH_KEY: ${{ secrets.SSH_KEY }}
       run: |
         cd deployment
-        ./configure.sh "$SSH_KEY" "${{ steps.public_ip.outputs.stdout }}"
+        ./configure.sh "$SSH_KEY" "${{ steps.public_ip.outputs.stdout }}" "{{ github.sha }}"
