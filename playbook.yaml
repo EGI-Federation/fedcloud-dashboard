@@ -10,6 +10,13 @@
 - hosts: all
   become: yes
   gather_facts: yes
+  - name: Test reload
+    ansible.builtin.systemd:
+      daemon_reload: yes
+
+- hosts: all
+  become: yes
+  gather_facts: yes
   roles:
   - role: 'grycap.docker'
 
