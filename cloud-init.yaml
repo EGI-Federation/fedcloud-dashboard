@@ -1,5 +1,8 @@
 #cloud-config
 ---
+# avoid auto-upgrade kicking off in the first boot
+bootcmd:
+- [cloud-init-per, once, touch, /var/lib/apt/periodic/update-success-stamp]
 
 users:
 - name: egi
