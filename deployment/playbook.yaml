@@ -21,7 +21,7 @@
   - name: Checkout repo at VM
     ansible.builtin.git:
       repo: 'https://github.com/EGI-Foundation/fedcloud-dashboard.git'
-      version: {{ git_ref }}
+      version: "{{ git_ref }}"
       dest: /horizon-aggregator
 
   - name: env file
