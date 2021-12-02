@@ -20,14 +20,14 @@ def update_endpoints():
     Update the file containing the list of GOCDB endpoints
     of type "org.openstack.horizon"
     """
-    # Recreate sentinel file    
+    # Recreate sentinel file
     sentinel_file.unlink(missing_ok=True)
 
-    with open(sentinel_file, 'w') as f:
+    with open(sentinel_file, "w") as f:
         endpoints = find_endpoints("org.openstack.horizon")
         for site, service_type, endpoint in endpoints:
-            f.write(f'{site},{endpoint}\n')
-        
+            f.write(f"{site},{endpoint}\n")
+
 
 def read_endpoints():
     """
@@ -45,7 +45,7 @@ def read_endpoints():
         time_now_in_seconds = round(time.time())
         # How long has it passed?
         difference = time_now_in_seconds - time_sentinel_modified
-    
+
         if difference > SENTINEL_FILE_CHANGE_SECONDS:
             update_endpoints()
 
@@ -54,7 +54,7 @@ def read_endpoints():
     # https://stackoverflow.com/questions/3277503/how-to-read-a-file-line-by-line-into-a-list
     with open(sentinel_file) as f:
         for line in f:
-            endpoints.append(line.rstrip().split(','))
+            endpoints.append(line.rstrip().split(","))
 
     return endpoints
 

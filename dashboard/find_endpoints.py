@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-'''
+"""
 This code has been copied from https://github.com/tdviet/fedcloudclient
-'''
+"""
 
 from urllib import parse
 import defusedxml.ElementTree as ElementTree

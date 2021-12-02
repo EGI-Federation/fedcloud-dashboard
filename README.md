@@ -6,13 +6,13 @@ Proof of concept to gather all OpenStack Horizon endpoints published in the EGI 
 ## Installation
 
 Clone this repository:
-```
+```shell
 cd /path/to/working/directory
 git clone https://github.com/sebastian-luna-valero/horizon-aggregator.git
 ```
 
 Create a conda environment with requirements:
-```
+```shell
 # Download and install conda
 cd /path/to/conda/install/folder
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -27,13 +27,13 @@ conda activate horizon-aggregator
 
 ## Preview
 Test whether the query script works:
-```
+```shell
 cd /path/to/working/directory/horizon-aggregator/dashboard/
 python find_endpoints.py
 ```
 
 Test whether the flask app works:
-```
+```shell
 cd /path/to/working/directory/horizon-aggregator/dashboard/
 flask run --host=0.0.0.0
 ```
@@ -45,7 +45,7 @@ Below are specific steps to make the flask app work using [Apache](https://hub.d
 ### Build image
 
 Here are the steps:
-```
+```shell
 git clone https://github.com/sebastian-luna-valero/horizon-aggregator.git
 cd horizon-aggregator/docker
 sudo docker build --no-cache -t dashboard:1.0.0 .
@@ -54,7 +54,7 @@ sudo docker build --no-cache -t dashboard:1.0.0 .
 ### Run container
 
 Here are the steps:
-```
+```shell
 git clone https://github.com/sebastian-luna-valero/horizon-aggregator.git
 cd horizon-aggregator/dashboard
 sudo docker run \

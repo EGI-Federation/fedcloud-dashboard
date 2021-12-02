@@ -1,5 +1,5 @@
-<!-- Adapted from https://github.com/EGI-Federation/egi-notebooks-monitoring/ -->
 <!doctype html>
+<!-- Adapted from https://github.com/EGI-Federation/egi-notebooks-monitoring/ -->
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -9,7 +9,7 @@
   </head>
   <body>
         <div class="container">
-          <img src="{{ url_for('static', filename='images/egi.png') }}" height="350">
+          <img src="{{ url_for('static', filename='images/egi.png') }}" alt="EGI logo" height="350">
           <h1>EGI Cloud Compute Dashboard</h1>
           {% for site, endpoint in endpoints %}
           <p>{{ site }}: <a href="{{ endpoint }}">{{ endpoint }}</a></p>
