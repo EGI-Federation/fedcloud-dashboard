@@ -1,6 +1,5 @@
 #cloud-config
 ---
-
 users:
 - name: egi
   gecos: EGI
