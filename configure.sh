@@ -19,6 +19,6 @@ echo "$SSH_KEY" > key
 chmod 400 key
 
 # and now config
-ansible-galaxy install grycap.docker
+ansible-galaxy install -r galaxy-requirements.yaml
 
 ansible-playbook -i inventory.yaml playbook.yaml

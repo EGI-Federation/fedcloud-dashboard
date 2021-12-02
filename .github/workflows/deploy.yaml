@@ -94,19 +94,7 @@ jobs:
              "https://nsupdate.fedcloud.eu/nic/update?myip=${{ steps.public_ip.outputs.stdout }}"
     - name: Configure with ansible
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      uses: dawidd6/action-ansible-playbook@v2
-      with:
-        playbook: playbook.yaml
-        directory: ./
-        key: ${{secrets.SSH_KEY}}
-        inventory: |
-          all:
-            hosts:
-              ${{ steps.public_ip.outputs.stdout }}:
-                ansible_user: egi
-                ansible_ssh_private_key_file: key
-                ansible_ssh_common_args: -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
-        requirements: galaxy-requirements.yaml
-        # Optional, additional flags to pass to ansible-playbook
-        options: |
-          --verbose
+      env:
+        SSH_KEY: ${{ secrets.SSH_KEY }}
+      run: |
+        ./configure.sh "$SSH_KEY" "${{ steps.public_ip.outputs.stdout }}"
