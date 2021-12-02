@@ -1,19 +1,12 @@
 ---
 - hosts: all
+  gather_facts: no
   tasks:
   - name: Wait for ssh
     # give it some time as the VM may take a while to start
     wait_for_connection:
-      delay: 60
+      delay: 30
       timeout: 600
-
-- hosts: all
-  become: yes
-  gather_facts: yes
-  tasks:
-  - name: Test reload
-    ansible.builtin.systemd:
-      daemon_reload: yes
 
 - hosts: all
   become: yes

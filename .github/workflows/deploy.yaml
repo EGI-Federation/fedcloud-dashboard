@@ -90,7 +90,7 @@ jobs:
       env:
         NSUPDATE_SECRET: ${{ secrets.NSUPDATE_SECRET }}
       run: |
-        curl -u "horizon.vm.fedcloud.eu.:$NSUPDATE_SECRET" \
+        curl -u "horizon.vm.fedcloud.eu:$NSUPDATE_SECRET" \
              "https://nsupdate.fedcloud.eu/nic/update?myip=${{ steps.public_ip.outputs.stdout }}"
     - name: Configure with ansible
       # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
