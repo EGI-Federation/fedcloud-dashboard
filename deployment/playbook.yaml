@@ -20,15 +20,15 @@
   tasks:
   - name: Checkout repo at VM
     ansible.builtin.git:
-      repo: 'https://github.com/EGI-Foundation/fedcloud-dashboard.git'
+      repo: 'https://github.com/EGI-Federation/fedcloud-dashboard.git'
       version: "{{ git_ref }}"
-      dest: /horizon-aggregator
+      dest: /fedcloud-dashboard
 
   - name: env file
     ansible.builtin.copy:
       content: |
         DASHBOARD_HOSTNAME=dashboard.cloud.egi.eu
-      dest: /horizon-aggregator/.env
+      dest: /fedcloud-dashboard/.env
 
   - name: service file
     ansible.builtin.copy:
@@ -44,7 +44,7 @@
         [Service]
         Type=oneshot
         RemainAfterExit=true
-        WorkingDirectory=/horizon-aggregator
+        WorkingDirectory=/fedcloud-dashboard
         ExecStart=/usr/local/bin/docker-compose up -d --remove-orphans
         ExecStop=/usr/local/bin/docker-compose down
 
