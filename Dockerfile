@@ -1,0 +1,15 @@
+FROM python:3.10
+
+COPY requirements.txt /dashboard/requirements.txt
+
+COPY dashboard /dashboard
+
+RUN pip install --no-cache-dir --upgrade -r /dashboard/requirements.txt
+
+COPY ./dashboard /dashboard/dashboard
+
+WORKDIR /dashboard
+
+EXPOSE 8000
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "dashboard.main:app"]

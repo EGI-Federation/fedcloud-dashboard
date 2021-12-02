@@ -1,0 +1,19 @@
+<!-- Adapted from https://github.com/EGI-Federation/egi-notebooks-monitoring/ -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <!-- https://pythonhow.com/add-css-to-flask-website/ -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>EGI Cloud Compute Dashboard</title>
+  </head>
+  <body>
+        <div class="container">
+          <img src="{{ url_for('static', filename='images/egi.png') }}" height="350">
+          <h1>EGI Cloud Compute Dashboard</h1>
+          {% for site, endpoint in endpoints %}
+          <p>{{ site }}: <a href="{{ endpoint }}">{{ endpoint }}</a></p>
+          {% endfor %}
+        </div>
+  </body>
+</html>
