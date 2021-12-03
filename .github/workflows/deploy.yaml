@@ -104,7 +104,7 @@ jobs:
       with:
         playbook: playbook.yml
         directory: ./deployment
-        key: ${{ $secrets.SSH_KEY }}
+        key: ${{ secrets.SSH_KEY }}
         inventory: |
           [all]
           ${{ steps.public_ip.outputs.stdout }}
