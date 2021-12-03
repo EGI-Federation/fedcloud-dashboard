@@ -1,10 +1,11 @@
 ---
 - hosts: all
+  gather_facts: no
   tasks:
   - name: Wait for ssh
     # give it some time as the VM may take a while to start
     wait_for_connection:
-      delay: 60
+      delay: 30
       timeout: 600
 
 - hosts: all
@@ -17,17 +18,17 @@
   become: yes
   gather_facts: yes
   tasks:
-  - name: Get dashboard repo
+  - name: Checkout repo at VM
     ansible.builtin.git:
-      repo: 'https://github.com/enolfc/horizon-aggregator.git'
-      dest: /horizon-aggregator
-      version: gunicorn
+      repo: 'https://github.com/EGI-Federation/fedcloud-dashboard.git'
+      version: "{{ git_ref }}"
+      dest: /fedcloud-dashboard
 
   - name: env file
     ansible.builtin.copy:
       content: |
         DASHBOARD_HOSTNAME=dashboard.cloud.egi.eu
-      dest: /horizon-aggregator/.env
+      dest: /fedcloud-dashboard/.env
 
   - name: service file
     ansible.builtin.copy:
@@ -43,7 +44,7 @@
         [Service]
         Type=oneshot
         RemainAfterExit=true
-        WorkingDirectory=/horizon-aggregator
+        WorkingDirectory=/fedcloud-dashboard
         ExecStart=/usr/local/bin/docker-compose up -d --remove-orphans
         ExecStop=/usr/local/bin/docker-compose down
 

@@ -30,21 +30,25 @@ jobs:
         MYTOKEN: ${{ secrets.MYTOKEN }}
       run: |
         PATH="$PWD:$PATH"
+        cd deployment
         ./site-config.sh
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Format
       id: fmt
       run: |
+        cd deployment
         terraform fmt -check
     - name: Terraform init
       id: init
       run: |
+        cd deployment
         terraform init
     - name: terraform plan
       id: plan
       if: github.event_name == 'pull_request'
       run: |
+        cd deployment
         terraform plan -no-color -var-file=deploy.tfvars
       continue-on-error: true
     - name: Update Pull Request
@@ -79,34 +83,25 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
+        cd deployment
         terraform apply -auto-approve -var-file=deploy.tfvars
     - name: Get IP
       id: public_ip
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
+        cd deployment
         terraform output -raw public_ip
     - name: Update IP in DNS
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       env:
         NSUPDATE_SECRET: ${{ secrets.NSUPDATE_SECRET }}
       run: |
-        curl -u "horizon.vm.fedcloud.eu.:$NSUPDATE_SECRET" \
+        curl -u "horizon.vm.fedcloud.eu:$NSUPDATE_SECRET" \
              "https://nsupdate.fedcloud.eu/nic/update?myip=${{ steps.public_ip.outputs.stdout }}"
     - name: Configure with ansible
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      uses: dawidd6/action-ansible-playbook@v2
-      with:
-        playbook: playbook.yaml
-        directory: ./
-        key: ${{secrets.SSH_KEY}}
-        inventory: |
-          all:
-            hosts:
-              ${{ steps.public_ip.outputs.stdout }}:
-                ansible_user: egi
-                ansible_ssh_private_key_file: key
-                ansible_ssh_common_args: -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
-        requirements: galaxy-requirements.yaml
-        # Optional, additional flags to pass to ansible-playbook
-        options: |
-          --verbose
+      env:
+        SSH_KEY: ${{ secrets.SSH_KEY }}
+      run: |
+        cd deployment
+        ./configure.sh "$SSH_KEY" "${{ steps.public_ip.outputs.stdout }}" "{{ github.sha }}"
