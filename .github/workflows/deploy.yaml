@@ -100,8 +100,16 @@ jobs:
              "https://nsupdate.fedcloud.eu/nic/update?myip=${{ steps.public_ip.outputs.stdout }}"
     - name: Configure with ansible
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      env:
-        SSH_KEY: ${{ secrets.SSH_KEY }}
-      run: |
-        cd deployment
-        ./configure.sh "$SSH_KEY" "${{ steps.public_ip.outputs.stdout }}" "{{ github.sha }}"
+      uses: dawidd6/action-ansible-playbook@v2
+      with:
+        playbook: playbook.yml
+        directory: ./deployment
+        key: ${{secrets.SSH_KEY}}
+        inventory: |
+          [all]
+          ${{ steps.public_ip.outputs.stdout }}
+        requirements: galaxy-requirements.yaml
+        options: |
+          --extra-vars git_ref="{{ github.sha }}"
+          --ssh-common-args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+          -u egi
