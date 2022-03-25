@@ -60,11 +60,11 @@ cd fedcloud-dashboard/dashboard
 sudo docker run \
   --name dashboard \
   --detach \
-  --publish 80:80 \
+  --publish 8000:8000 \
   --volume "$(pwd)":/var/www/html \
   dashboard:1.0.0
 ```
 
 The app should now return the list OpenStack Horizon endpoints published in the EGI GOCDB.
 
-Make sure port 80 is open on the target system!
+Make sure port 8000 is open on the target system!
