@@ -40,7 +40,7 @@ flask run --host=0.0.0.0
 
 ## Use docker
 
-Below are specific steps to make the flask app work using [Apache](https://hub.docker.com/r/ubuntu/apache2).
+First things first: make sure port 8000 is open on the target system!
 
 ### Build image
 
@@ -66,5 +66,3 @@ sudo docker run \
 ```
 
 The app should now return the list OpenStack Horizon endpoints published in the EGI GOCDB.
-
-Make sure port 8000 is open on the target system!
