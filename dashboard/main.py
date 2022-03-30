@@ -1,7 +1,9 @@
-from flask import Flask, render_template
-import sys
 import os
-script_dir = os.path.abspath(os.path.dirname( __file__ ))
+import sys
+
+from flask import Flask, render_template
+
+script_dir = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, script_dir)
 from update_endpoints import read_endpoints
 
@@ -14,4 +16,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    ain()
