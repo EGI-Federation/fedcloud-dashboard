@@ -61,7 +61,6 @@ sudo docker run \
   --name dashboard \
   --detach \
   --publish 8000:8000 \
-  --volume "$(pwd)":/var/www/html \
   dashboard:1.0.0
 ```
 
