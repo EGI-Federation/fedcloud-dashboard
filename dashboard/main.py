@@ -1,4 +1,8 @@
 from flask import Flask, render_template
+import sys
+import os
+script_dir = os.path.abspath(os.path.dirname( __file__ ))
+sys.path.insert(0, script_dir)
 from update_endpoints import read_endpoints
 
 app = Flask(__name__)
