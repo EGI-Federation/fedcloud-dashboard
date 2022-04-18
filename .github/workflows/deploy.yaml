@@ -33,7 +33,7 @@ jobs:
         cd deployment
         ./site-config.sh
     - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+      uses: hashicorp/setup-terraform@v2
     - name: Terraform Format
       id: fmt
       run: |
