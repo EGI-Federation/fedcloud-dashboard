@@ -10,12 +10,8 @@ jobs:
 
     steps:
       # Checks out a copy of your repository on the ubuntu-latest machine
-      # see https://github.com/actions/checkout/issues/766
-      - name: work around permission issue
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
-
       - name: Checkout code
-        uses: actions/checkout@v3.0.1
+        uses: actions/checkout@v3
 
       - name: Check links on new changes
         uses: gaurav-nelson/github-action-markdown-link-check@v1
