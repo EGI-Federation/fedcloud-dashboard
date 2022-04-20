@@ -1,14 +1,12 @@
 FROM python:3.10
 
-COPY requirements.txt /dashboard/requirements.txt
+COPY requirements.txt /fedcloud-dashboard/requirements.txt
 
-COPY dashboard /dashboard
+RUN pip install --no-cache-dir --upgrade -r /fedcloud-dashboard/requirements.txt
 
-RUN pip install --no-cache-dir --upgrade -r /dashboard/requirements.txt
+COPY ./dashboard /fedcloud-dashboard/dashboard
 
-COPY ./dashboard /dashboard/dashboard
-
-WORKDIR /dashboard
+WORKDIR /fedcloud-dashboard
 
 EXPOSE 8000
 

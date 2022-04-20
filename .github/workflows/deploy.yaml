@@ -104,7 +104,7 @@ jobs:
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       uses: dawidd6/action-ansible-playbook@v2
       with:
-        playbook: playbook.yml
+        playbook: playbook.yaml
         directory: ./deployment
         key: ${{ secrets.SSH_KEY }}
         inventory: |
