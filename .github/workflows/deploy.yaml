@@ -112,6 +112,6 @@ jobs:
           ${{ steps.public_ip.outputs.stdout }}
         requirements: galaxy-requirements.yaml
         options: |
-          --extra-vars git_ref={{ github.sha }}
+          --extra-vars git_ref=${{ github.sha }}
           --ssh-common-args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
           -u egi
