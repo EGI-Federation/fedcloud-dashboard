@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Setup python
       uses: actions/setup-python@v3
     - name: Install environment
@@ -24,7 +24,9 @@ jobs:
         curl -L https://github.com/oidc-mytoken/client/releases/download/v0.3.0/mytoken_0.3.0_Linux_x86_64.tar.gz \
           | tar -xzf -
         mkdir ~/.mytoken
-        curl https://raw.githubusercontent.com/oidc-mytoken/client/master/config/example-config.yaml > ~/.mytoken/config.yaml
+        curl https://raw.githubusercontent.com/oidc-mytoken/client/master/config/example-config.yaml \
+          | sed 's/default_provider:/default_provider: "egi"/g' \
+          > ~/.mytoken/config.yaml
     - name: Configure providers access
       env:
         MYTOKEN: ${{ secrets.MYTOKEN }}
@@ -33,7 +35,7 @@ jobs:
         cd deployment
         ./site-config.sh
     - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+      uses: hashicorp/setup-terraform@v2
     - name: Terraform Format
       id: fmt
       run: |
@@ -110,6 +112,6 @@ jobs:
           ${{ steps.public_ip.outputs.stdout }}
         requirements: galaxy-requirements.yaml
         options: |
-          --extra-vars git_ref={{ github.sha }}
+          --extra-vars git_ref=${{ github.sha }}
           --ssh-common-args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
           -u egi
