@@ -45,7 +45,8 @@
         Type=oneshot
         RemainAfterExit=true
         WorkingDirectory=/fedcloud-dashboard
-        ExecStart=/usr/local/bin/docker-compose up -d --remove-orphans
+        ExecStartPre=/usr/bin/docker pull python:3.10
+        ExecStart=/usr/local/bin/docker-compose up -d --force-recreate --build --remove-orphans
         ExecStop=/usr/local/bin/docker-compose down
 
         [Install]
@@ -56,5 +57,5 @@
     ansible.builtin.systemd:
       name: dashboard.service
       enabled: yes
-      state: started
+      state: restarted
       daemon_reload: yes
