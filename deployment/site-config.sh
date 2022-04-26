@@ -5,6 +5,8 @@ set -e
 # builds the clouds.yaml file needed for OpenStack clients
 # Reads from config.yaml the clouds to use
 
+# Also to ignore, playing around
+
 dump_config() {
     # dumps a piece of yaml ready to be included in the
     # clouds.yaml Openstack client config
