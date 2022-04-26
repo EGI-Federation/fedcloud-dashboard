@@ -2,6 +2,8 @@
 
 Proof of concept to gather all OpenStack Horizon endpoints published in the EGI GOCDB.
 
+Just testing?
+
 ## Installation
 
 Clone this repository:
