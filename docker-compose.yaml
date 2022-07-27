@@ -17,7 +17,7 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.myresolver.acme.email=enol.fernandez@egi.eu"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
@@ -29,9 +29,20 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   dashboard:
-    build: .
+    image: "lissy93/dashy:latest"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`${DASHBOARD_HOSTNAME}`)"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
+      - "traefik.http.services.my-service.loadbalancer.server.port=8080"
+    volumes:
+      - "config:/app/public"
+
+  endpoint_updater:
+    build: .
+    volumes:
+      - "config:/app/public"
+
+volumes:
+  config:
