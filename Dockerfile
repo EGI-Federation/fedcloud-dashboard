@@ -1,14 +1,16 @@
 FROM python:3.10
 
-RUN apt-get update && apt-get install -y supervisor cron
-
-RUN mkdir -p /var/log/supervisor
+# Get supervisor and cron
+RUN apt-get update \
+ && apt-get install --no-install-recommends -y supervisor cron \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && mkdir -p /var/log/supervisor \
+ && rm /etc/cron.daily/*
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 COPY cron-update-endpoints /etc/cron.d/endpoints
-
-RUN rm /etc/cron.daily/*
 
 COPY requirements.txt /fedcloud-dashboard/requirements.txt
 
