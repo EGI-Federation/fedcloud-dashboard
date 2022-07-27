@@ -35,7 +35,6 @@ services:
       - "traefik.http.routers.dashboard.rule=Host(`${DASHBOARD_HOSTNAME}`)"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
-      - "traefik.http.services.my-service.loadbalancer.server.port=8080"
     volumes:
       - "config:/app/public"
 
