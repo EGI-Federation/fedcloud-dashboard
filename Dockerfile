@@ -1,6 +1,8 @@
 FROM python:3.10
 
 # Get supervisor and cron
+# Do not get picky on exact cron & supervisor versions
+# hadolint ignore=DL3008
 RUN apt-get update \
  && apt-get install --no-install-recommends -y supervisor cron \
  && apt-get clean \
