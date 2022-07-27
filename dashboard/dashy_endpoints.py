@@ -8,11 +8,14 @@ from urllib import parse
 
 import defusedxml.ElementTree as ElementTree
 import requests
-
 import yaml
 
-DEFAULT_ICON = "https://github.com/openstack/openstackdocstheme/blob/master/openstackdocstheme/theme/openstackdocs/static/favicon.ico?raw=true"
+DEFAULT_ICON = (
+    "https://github.com/openstack/openstackdocstheme/blob/master"
+    "/openstackdocstheme/theme/openstackdocs/static/favicon.ico?raw=true"
+)
 GOCDB_PUBLICURL = "https://goc.egi.eu/gocdbpi/public/"
+DOCS_URL = "https://docs.egi.eu/users/compute/cloud-compute/openstack/"
 TIMEOUT = 10
 
 
@@ -93,7 +96,7 @@ def main():
             "navLinks": [
                 {
                     "title": "Documentation",
-                    "path": "https://docs.egi.eu/users/compute/cloud-compute/openstack/",
+                    "path": DOCS_URL,
                 }
             ],
             "logo": "https://egi-api.nois3.net/app/uploads/2021/11/egi-logo.svg",
@@ -103,7 +106,7 @@ def main():
             "layout": "horizontal",
             "iconSize": "medium",
             "language": "en",
-            "disableConfiguration": true,
+            "disableConfiguration": True,
         },
         "sections": [
             {"name": "OpenStack Dashboards", "icon": "fas fa-clouds", "items": []}
