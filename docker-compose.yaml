@@ -29,9 +29,19 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   dashboard:
-    build: .
+    image: "lissy93/dashy:latest"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`${DASHBOARD_HOSTNAME}`)"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
+    volumes:
+      - "config:/app/public"
+
+  endpoint_updater:
+    build: .
+    volumes:
+      - "config:/app/public"
+
+volumes:
+  config:
