@@ -1,16 +1,46 @@
 # FedCloud dashboard
 
-Proof of concept to gather all OpenStack Horizon endpoints published in the EGI GOCDB.
+A web dashboard which shows all OpenStack Horizon endpoints published in
+[EGI GOCDB](https://goc.egi.eu/)
 
 ## Installation
 
-Clone this repository:
+This code relies on docker-compose to run 3 containers:
+
+- [traefik](https://traefik.io/traefik/) to provide HTTP proxy and cert
+  management
+- [dashy](https://dashy.to/) for generating the dashboard
+- some python code to generate the list of endpoints
+
+The existing docker-compose file assumes you will run the code on a publicly
+accessible host with a valid name. You can create a `.env` file with the
+`DASHBOARD_HOSTNAME` variable defined with the hostname of your server and just
+start the service:
+
+```shell
+cd /path/to/working/directory
+git clone https://github.com/EGI-Federation/fedcloud-dashboard.git
+echo "DASHBOARD_HOSTNAME="<your host name>"
+docker-compose up --build
+```
+
+This will build the container that generates the list of endpoints and start all
+the process to make the dashboard available.
+
+## Running locally
+
+If you don't have a publicly accessible host, the easiest is to manually run
+dashy and the code to generate the list of endpoints:
+
+First clone the repository:
+
 ```shell
 cd /path/to/working/directory
 git clone https://github.com/EGI-Federation/fedcloud-dashboard.git
 ```
 
 Create a conda environment with requirements:
+
 ```shell
 # Download and install conda
 cd /path/to/conda/install/folder
@@ -24,44 +54,21 @@ conda env create -f environment.yml
 conda activate horizon-aggregator
 ```
 
-## Preview
 Test whether the query script works:
+
 ```shell
 cd /path/to/working/directory/fedcloud-dashboard/dashboard/
-python find_endpoints.py
+python dashy_endpoints.py > conf.yml
 ```
 
-Test whether the flask app works:
+Use the generated `conf.yml` with dashy:
+
 ```shell
 cd /path/to/working/directory/fedcloud-dashboard/dashboard/
-export FLASK_APP=main
-flask run --host=0.0.0.0
+docker run  \
+       -p 8080:80 \
+       -v  $PWD/conf.yml:/app/public/conf.yml \
+       lissy93/dashy:latest
 ```
 
-## Use docker
-
-First things first: make sure port 8000 is open on the target system!
-
-### Build image
-
-Here are the steps:
-```shell
-git clone https://github.com/EGI-Federation/fedcloud-dashboard.git
-cd fedcloud-dashboard
-sudo docker build --no-cache -t dashboard:1.0.0 .
-```
-
-### Run container
-
-Here are the steps:
-```shell
-git clone https://github.com/EGI-Federation/fedcloud-dashboard.git
-cd fedcloud-dashboard/dashboard
-sudo docker run \
-  --name dashboard \
-  --detach \
-  --publish 8000:8000 \
-  dashboard:1.0.0
-```
-
-The app should now return the list OpenStack Horizon endpoints published in the EGI GOCDB.
+And point your browser to `http://localhost:8080` to see your dashboard running

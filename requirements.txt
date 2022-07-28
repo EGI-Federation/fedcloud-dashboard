@@ -1,5 +1,3 @@
-gunicorn
-flask
 requests
 defusedxml
 pyyaml
