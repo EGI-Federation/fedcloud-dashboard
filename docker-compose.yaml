@@ -27,6 +27,7 @@ services:
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart: always
 
   dashboard:
     image: "lissy93/dashy:latest"
@@ -37,11 +38,13 @@ services:
       - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
     volumes:
       - "config:/app/public"
+    restart: always
 
   endpoint_updater:
     build: .
     volumes:
       - "config:/app/public"
+    restart: always
 
 volumes:
   config:
