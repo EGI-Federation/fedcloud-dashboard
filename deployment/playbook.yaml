@@ -13,6 +13,8 @@
   gather_facts: yes
   roles:
   - role: 'grycap.docker'
+    docker_config_values: { "mtu": 1400 }
+
 
 - hosts: all
   become: yes
