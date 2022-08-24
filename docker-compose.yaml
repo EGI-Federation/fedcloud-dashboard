@@ -27,6 +27,10 @@ services:
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    deploy:
+      restart_policy:
+        condition: any
+
 
   dashboard:
     image: "lissy93/dashy:latest"
@@ -37,11 +41,23 @@ services:
       - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
     volumes:
       - "config:/app/public"
+    deploy:
+      restart_policy:
+        condition: any
 
   endpoint_updater:
     build: .
     volumes:
       - "config:/app/public"
+    deploy:
+      restart_policy:
+        condition: any
 
 volumes:
   config:
+
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
