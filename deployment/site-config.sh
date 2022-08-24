@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -ex
+set -e
 
 # builds the clouds.yaml file needed for OpenStack clients
 # Reads from config.yaml the clouds to use
