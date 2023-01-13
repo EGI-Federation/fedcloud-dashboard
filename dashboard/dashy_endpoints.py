@@ -4,12 +4,12 @@
 This code has been copied from https://github.com/tdviet/fedcloudclient
 """
 
+from pathlib import Path
 from urllib import parse
 
 import defusedxml.ElementTree as ElementTree
 import requests
 import yaml
-from pathlib import Path
 
 DEFAULT_ICON = (
     "https://github.com/openstack/openstackdocstheme/blob/master"
@@ -135,7 +135,7 @@ def main():
                 }
             )
         print(yaml.dump(dashy_conf))
-        with open(DASHY_OUTOUT, 'w') as f:
+        with open(DASHY_OUTOUT, "w") as f:
             yaml.dump(dashy_conf, f)
     except Exception:
         if Path(DASHY_OUTOUT).is_file():
