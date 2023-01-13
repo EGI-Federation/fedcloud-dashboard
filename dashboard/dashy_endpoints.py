@@ -9,6 +9,7 @@ from urllib import parse
 import defusedxml.ElementTree as ElementTree
 import requests
 import yaml
+from pathlib import Path
 
 DEFAULT_ICON = (
     "https://github.com/openstack/openstackdocstheme/blob/master"
@@ -17,6 +18,7 @@ DEFAULT_ICON = (
 GOCDB_PUBLICURL = "https://goc.egi.eu/gocdbpi/public/"
 DOCS_URL = "https://docs.egi.eu/users/compute/cloud-compute/openstack/"
 TIMEOUT = 10
+DASHY_OUTOUT = "dashy.output"
 
 
 def get_sites():
@@ -119,19 +121,29 @@ def main():
             "hideForGuests": False,
         },
     }
-    endpoints = find_endpoints("org.openstack.horizon")
-    items = dashy_conf["sections"][0]["items"]
-    for s in endpoints:
-        items.append(
-            {
-                "title": s[0],
-                "description": "%s (%s)" % (s[3], s[4]),
-                "icon": DEFAULT_ICON,
-                "url": s[2],
-                "target": "newtab",
-            }
-        )
-    print(yaml.dump(dashy_conf))
+    try:
+        endpoints = find_endpoints("org.openstack.horizon")
+        items = dashy_conf["sections"][0]["items"]
+        for s in endpoints:
+            items.append(
+                {
+                    "title": s[0],
+                    "description": "%s (%s)" % (s[3], s[4]),
+                    "icon": DEFAULT_ICON,
+                    "url": s[2],
+                    "target": "newtab",
+                }
+            )
+        print(yaml.dump(dashy_conf))
+        with open(DASHY_OUTOUT, 'w') as f:
+            yaml.dump(dashy_conf, f)
+    except Exception:
+        if Path(DASHY_OUTOUT).is_file():
+            with open(DASHY_OUTOUT) as f:
+                print(yaml.dump(yaml.safe_load(f)))
+        else:
+            # to-do: write in dashy_conf: "site not available at the moment"
+            print(yaml.dump(dashy_conf))
 
 
 if __name__ == "__main__":
