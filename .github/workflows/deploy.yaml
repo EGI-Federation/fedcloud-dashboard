@@ -25,7 +25,7 @@ jobs:
         curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > jq
         chmod +x jq
         pip install yq ansible git+https://github.com/tdviet/fedcloudclient.git
-        curl -L https://github.com/oidc-mytoken/client/releases/download/v0.3.0/mytoken_0.3.0_Linux_x86_64.tar.gz \
+        curl -L https://github.com/oidc-mytoken/client/releases/download/v0.5.2/mytoken_0.5.2_linux_64-bit.tar.gz \
           | tar -xzf -
         mkdir ~/.mytoken
         curl https://raw.githubusercontent.com/oidc-mytoken/client/master/config/example-config.yaml \
