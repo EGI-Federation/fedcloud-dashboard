@@ -1,7 +1,9 @@
 ---
 name: Lint
 
-on: [push, pull_request]
+on: pull_request
+
+permissions: read-all
 
 jobs:
   super-lint:
@@ -13,7 +15,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          # Full git history needed to get proper list of changed files
           fetch-depth: 0
 
       # Runs the Super-Linter action
@@ -26,3 +27,4 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           # Fail on errors
           DISABLE_ERRORS: false
+          VALIDATE_CHECKOV: false

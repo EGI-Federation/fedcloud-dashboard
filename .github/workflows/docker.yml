@@ -1,6 +1,8 @@
 ---
 name: Check the container can be built
 
+permissions: read-all
+
 on:
   push:
     branches:
