@@ -9,6 +9,9 @@ on:
     paths:
       - 'deployment/**'
 
+permissions: 
+  pull-requests: write
+
 jobs:
   terraform:
     name: 'Terraform'
