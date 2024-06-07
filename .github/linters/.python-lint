@@ -1,8 +1,19 @@
-[tool.pylint.main]
+[MAIN]
 jobs = 0
 
-[tool.pylint."messages control"]
+[MESSAGES CONTROL]
 # add import-error to the default list
 # generated with:
-#   $ pylint --disable=import-error --generate-toml-config
-disable = ["raw-checker-failed", "bad-inline-option", "locally-disabled", "file-ignored", "suppressed-message", "useless-suppression", "deprecated-pragma", "use-symbolic-message-instead", "use-implicit-booleaness-not-comparison-to-string", "use-implicit-booleaness-not-comparison-to-zero", "import-error"]
+#   $ pylint --disable=import-error --generate-rcfile
+#
+disable=raw-checker-failed,
+        bad-inline-option,
+        locally-disabled,
+        file-ignored,
+        suppressed-message,
+        useless-suppression,
+        deprecated-pragma,
+        use-symbolic-message-instead,
+        use-implicit-booleaness-not-comparison-to-string,
+        use-implicit-booleaness-not-comparison-to-zero,
+        import-error
