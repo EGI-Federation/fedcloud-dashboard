@@ -101,7 +101,7 @@ def main():
                     "path": DOCS_URL,
                 }
             ],
-            "logo": "https://egi-api.nois3.net/app/uploads/2021/11/egi-logo.svg",
+            "logo": "https://cdn.egi.eu/app/uploads/2021/11/egi-logo.svg",
         },
         "appConfig": {
             "theme": "material",
