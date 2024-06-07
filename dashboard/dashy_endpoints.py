@@ -11,10 +11,6 @@ import requests
 import yaml
 from defusedxml import ElementTree
 
-DEFAULT_ICON = (
-    "https://github.com/openstack/openstackdocstheme/blob/master"
-    "/openstackdocstheme/theme/openstackdocs/static/favicon.ico?raw=true"
-)
 GOCDB_PUBLICURL = "https://goc.egi.eu/gocdbpi/public/"
 DOCS_URL = "https://docs.egi.eu/users/compute/cloud-compute/openstack/"
 TIMEOUT = 10
@@ -136,7 +132,7 @@ def main():
                 {
                     "title": s[0],
                     "description": f"{s[3]} ({s[4]})",
-                    "icon": "openstack.ico",
+                    "icon": "openstack.png",
                     "url": s[2],
                     "target": "newtab",
                 }
