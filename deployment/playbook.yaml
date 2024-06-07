@@ -48,8 +48,8 @@
         RemainAfterExit=true
         WorkingDirectory=/fedcloud-dashboard
         ExecStartPre=/usr/bin/docker pull python:3.10
-        ExecStart=/usr/local/docker-compose up -d --force-recreate --build --remove-orphans
-        ExecStop=/usr/local/docker-compose down
+        ExecStart=/usr/bin/docker-compose up -d --force-recreate --build --remove-orphans
+        ExecStop=/usr/bin/docker-compose down
 
         [Install]
         WantedBy=multi-user.target
