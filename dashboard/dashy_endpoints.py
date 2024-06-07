@@ -7,7 +7,7 @@ This code has been copied from https://github.com/tdviet/fedcloudclient
 from pathlib import Path
 from urllib import parse
 
-import defusedxml.ElementTree as ElementTree
+from defusedxml import ElementTree
 import requests
 import yaml
 
@@ -91,6 +91,9 @@ def find_endpoints(service_type, production=True, monitored=True):
 
 
 def main():
+    """
+    Main function, generates config
+    """
     dashy_conf = {
         "pageInfo": {
             "title": "EGI Cloud Compute",
@@ -128,18 +131,19 @@ def main():
             items.append(
                 {
                     "title": s[0],
-                    "description": "%s (%s)" % (s[3], s[4]),
+                    "description": f"{s[3]} ({s[4]})",
                     "icon": DEFAULT_ICON,
                     "url": s[2],
                     "target": "newtab",
                 }
             )
         print(yaml.dump(dashy_conf))
-        with open(DASHY_OUTOUT, "w") as f:
+        with open(DASHY_OUTOUT, "w", encoding="utf-8") as f:
             yaml.dump(dashy_conf, f)
-    except Exception:
+    # catching anything, we don't need to be specific
+    except Exception: # pylint: disable=broad-exception-caught
         if Path(DASHY_OUTOUT).is_file():
-            with open(DASHY_OUTOUT) as f:
+            with open(DASHY_OUTOUT, "r", encoding="utf-8") as f:
                 print(yaml.dump(yaml.safe_load(f)))
         else:
             # to-do: write in dashy_conf: "site not available at the moment"
