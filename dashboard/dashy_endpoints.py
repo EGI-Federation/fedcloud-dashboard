@@ -104,7 +104,7 @@ def main():
                     "path": DOCS_URL,
                 }
             ],
-            "logo": "egi-logo.svg",
+            "logo": "/egi-logo.svg",
         },
         "appConfig": {
             "theme": "material",
@@ -114,15 +114,19 @@ def main():
             "disableConfiguration": True,
         },
         "sections": [
-            {"name": "OpenStack Dashboards", "icon": "fas fa-clouds", "items": []}
+            {
+                "name": "OpenStack Dashboards",
+                "icon": "fas fa-clouds",
+                "items": [],
+                "displayData": {
+                    "sortBy": "alphabetical",
+                    "rows": 1,
+                    "cols": 1,
+                    "collapsed": False,
+                    "hideForGuests": False,
+                },
+            },
         ],
-        "displayData": {
-            "sortBy": "alphabetical",
-            "rows": 1,
-            "cols": 1,
-            "collapsed": False,
-            "hideForGuests": False,
-        },
     }
     try:
         endpoints = find_endpoints("org.openstack.horizon")

@@ -40,8 +40,7 @@ services:
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
     volumes:
-      - "config:/app/public"
-      - "/fedcloud-dashboard/icons:/app/user-data/item-icons/"
+      - "/fedcloud-dashboard/user-data:/app/user-data/"
     deploy:
       restart_policy:
         condition: any
@@ -49,13 +48,10 @@ services:
   endpoint_updater:
     build: .
     volumes:
-      - "config:/app/public"
+      - "/fedcloud-dashboard/user-data:/app/user-data/"
     deploy:
       restart_policy:
         condition: any
-
-volumes:
-  config:
 
 networks:
   default:
