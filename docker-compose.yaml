@@ -3,7 +3,7 @@ version: "3.3"
 services:
 
   traefik:
-    image: "traefik:v2.5"
+    image: "traefik:v2.11"
     container_name: "traefik"
     command:
       # - "--log.level=DEBUG"
@@ -33,7 +33,7 @@ services:
 
 
   dashboard:
-    image: "lissy93/dashy:latest"
+    image: "lissy93/dashy:3.x"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`${DASHBOARD_HOSTNAME}`)"
