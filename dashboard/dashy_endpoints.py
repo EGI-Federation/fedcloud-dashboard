@@ -7,9 +7,9 @@ This code has been copied from https://github.com/tdviet/fedcloudclient
 from pathlib import Path
 from urllib import parse
 
-from defusedxml import ElementTree
 import requests
 import yaml
+from defusedxml import ElementTree
 
 DEFAULT_ICON = (
     "https://github.com/openstack/openstackdocstheme/blob/master"
@@ -104,7 +104,7 @@ def main():
                     "path": DOCS_URL,
                 }
             ],
-            "logo": "https://cdn.egi.eu/app/uploads/2021/11/egi-logo.svg",
+            "logo": "egi-logo.svg",
         },
         "appConfig": {
             "theme": "material",
@@ -132,7 +132,7 @@ def main():
                 {
                     "title": s[0],
                     "description": f"{s[3]} ({s[4]})",
-                    "icon": DEFAULT_ICON,
+                    "icon": "openstack.ico",
                     "url": s[2],
                     "target": "newtab",
                 }
@@ -141,7 +141,7 @@ def main():
         with open(DASHY_OUTOUT, "w", encoding="utf-8") as f:
             yaml.dump(dashy_conf, f)
     # catching anything, we don't need to be specific
-    except Exception: # pylint: disable=broad-exception-caught
+    except Exception:  # pylint: disable=broad-exception-caught
         if Path(DASHY_OUTOUT).is_file():
             with open(DASHY_OUTOUT, "r", encoding="utf-8") as f:
                 print(yaml.dump(yaml.safe_load(f)))

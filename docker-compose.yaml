@@ -41,6 +41,7 @@ services:
       - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
     volumes:
       - "config:/app/public"
+      - "/fedcloud-dashboard/icons:/app/user-data/item-icons/"
     deploy:
       restart_policy:
         condition: any
