@@ -1,2 +1,4 @@
 # docker installation
 - src: grycap.docker
+# ssh-oidc access
+- src: grycap.motley-cue
