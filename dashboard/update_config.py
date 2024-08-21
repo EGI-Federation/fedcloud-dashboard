@@ -13,8 +13,46 @@ from defusedxml import ElementTree
 
 GOCDB_PUBLICURL = "https://goc.egi.eu/gocdbpi/public/"
 DOCS_URL = "https://docs.egi.eu/users/compute/cloud-compute/openstack/"
-TIMEOUT = 10
-DASHY_OUTOUT = "dashy.output"
+CONFIG_OUTPUT = "config.output"
+CONFIG_TEMPLATE = {
+    "title": "EGI Cloud Compute",
+    "subtitle": "FedCloud Dashboards",
+    "theme": "classic",
+    "columns": "3",
+    "stylesheet": ["assets/egi.css"],
+    "colors": {
+        "light": {"highlight-hover": "#ef8200", "highlight-secondary": "#005faa"}
+    },
+    "links": [
+        {
+            "icon": "fas fa-book",
+            "name": "User documentation",
+            "target": "_blank",
+            "url": "https://docs.egi.eu/users/compute/cloud-compute/openstack/",
+        },
+        {
+            "icon": "fas fa-book",
+            "name": "Provider documentation",
+            "target": "_blank",
+            "url": "https://docs.egi.eu/providers/cloud-compute/",
+        },
+    ],
+    "logo": "assets/egi-logo.svg",
+    "message": {
+        "content": "You can find here link to the OpenStack dashboards of "
+        "the EGI FedCloud providers",
+        "icon": "fa fa-table-columns",
+        "style": "is-dark",
+        "title": "Provider dashboards",
+    },
+    "services": [{"icon": "fas fa-cloud", "items": [], "name": "OpenStack Dashboards"}],
+    "footer": '<p><a href="https://www.egi.eu/service/cloud-compute/">Cloud '
+    "Compute</a> is a service delivered by the <a "
+    'href="https://www.egi.eu/egi-infrastructure/">EGI '
+    "Infrastructure</a> | This dashboard uses <a "
+    'href="https://github.com/bastienwirtz/homer">Homer</a>\n'
+    "</p>\n",
+}
 
 
 def get_sites():
@@ -90,64 +128,32 @@ def main():
     """
     Main function, generates config
     """
-    dashy_conf = {
-        "pageInfo": {
-            "title": "EGI Cloud Compute",
-            "description": "FedCloud providers dashboards",
-            "navLinks": [
-                {
-                    "title": "Documentation",
-                    "path": DOCS_URL,
-                }
-            ],
-            "logo": "/egi-logo.svg",
-        },
-        "appConfig": {
-            "theme": "material",
-            "layout": "horizontal",
-            "iconSize": "medium",
-            "language": "en",
-            "disableConfiguration": True,
-        },
-        "sections": [
-            {
-                "name": "OpenStack Dashboards",
-                "icon": "fas fa-clouds",
-                "items": [],
-                "displayData": {
-                    "sortBy": "alphabetical",
-                    "rows": 1,
-                    "cols": 1,
-                    "collapsed": False,
-                    "hideForGuests": False,
-                },
-            },
-        ],
-    }
+    config = CONFIG_TEMPLATE
     try:
         endpoints = find_endpoints("org.openstack.horizon")
-        items = dashy_conf["sections"][0]["items"]
+        items = config["services"][0]["items"]
         for s in endpoints:
             items.append(
                 {
-                    "title": s[0],
-                    "description": f"{s[3]} ({s[4]})",
-                    "icon": "openstack.png",
+                    "name": s[0],
+                    "logo": "assets/icons/openstack.png",
+                    "subtitle": f"{s[3]} ({s[4]})",
+                    "tag": s[4],
+                    "target": "_blank",
                     "url": s[2],
-                    "target": "newtab",
                 }
             )
-        print(yaml.dump(dashy_conf))
-        with open(DASHY_OUTOUT, "w", encoding="utf-8") as f:
-            yaml.dump(dashy_conf, f)
+        print(yaml.dump(config))
+        with open(CONFIG_OUTPUT, "w", encoding="utf-8") as f:
+            yaml.dump(config, f)
     # catching anything, we don't need to be specific
     except Exception:  # pylint: disable=broad-exception-caught
-        if Path(DASHY_OUTOUT).is_file():
-            with open(DASHY_OUTOUT, "r", encoding="utf-8") as f:
+        if Path(CONFIG_OUTPUT).is_file():
+            with open(CONFIG_OUTPUT, "r", encoding="utf-8") as f:
                 print(yaml.dump(yaml.safe_load(f)))
         else:
-            # to-do: write in dashy_conf: "site not available at the moment"
-            print(yaml.dump(dashy_conf))
+            # to-do: write in config: "site not available at the moment"
+            print(yaml.dump(config))
 
 
 if __name__ == "__main__":

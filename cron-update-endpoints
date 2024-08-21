@@ -1,1 +1,1 @@
-*/15 * * * * root /usr/local/bin/python /fedcloud-dashboard/dashboard/dashy_endpoints.py > /app/user-data/conf.yml
+*/15 * * * * root /usr/local/bin/python /fedcloud-dashboard/dashboard/update_config.py > /www/assets/config.yml

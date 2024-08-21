@@ -1,0 +1,40 @@
+---
+subtitle: "FedCloud Dashboards"
+title: "EGI Cloud Compute"
+logo: "assets/egi-logo.svg"
+
+footer: |
+  <p><a href="https://www.egi.eu/service/cloud-compute/">Cloud Compute</a> is a service delivered by the <a href="https://www.egi.eu/egi-infrastructure/">EGI Infrastructure</a> | This dashboard uses <a href="https://github.com/bastienwirtz/homer">Homer</a>
+  </p>
+
+theme: classic
+# Optional custom stylesheet
+# Will load custom CSS files. Especially useful for custom icon sets.
+stylesheet:
+  - "assets/egi.css"
+colors:
+  light:
+    highlight-secondary: "#005faa"
+    highlight-hover: "#ef8200"
+
+message:
+  style: "is-dark" # See https://bulma.io/documentation/components/message/#colors for styling options.
+  title: "Provider dashboards"
+  icon: "fa fa-table-columns"
+  content: "You can find here link to the OpenStack dashboards of the EGI FedCloud providers"
+
+links:
+  - name: "User documentation"
+    icon: "fas fa-book"
+    url: "https://docs.egi.eu/users/compute/cloud-compute/openstack/"
+    target: "_blank"
+  - name: "Provider documentation"
+    icon: "fas fa-book"
+    url: "https://docs.egi.eu/providers/cloud-compute/"
+    target: "_blank"
+
+ Services
+services:
+  - name: "OpenStack Dashboards"
+    icon: "fas fa-cloud"
+    items:
