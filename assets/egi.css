@@ -1,8 +1,7 @@
 @charset "UTF-8";
 
-/* Custom card colors */
-/* Use with `class:` property of services in config.yml */
+/* Custom colors */
 body #bighead .first-line {
-  background-color: #ffffff;
+  background-color: #fff;
   color: #005faa;
 }
