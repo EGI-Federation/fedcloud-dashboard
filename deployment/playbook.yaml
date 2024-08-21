@@ -26,12 +26,6 @@
       version: "{{ git_ref }}"
       dest: /fedcloud-dashboard
 
-  - name: env file
-    ansible.builtin.copy:
-      content: |
-        DASHBOARD_HOSTNAME=dashboard.cloud.egi.eu
-      dest: /fedcloud-dashboard/.env
-
   - name: service file
     ansible.builtin.copy:
       content: |

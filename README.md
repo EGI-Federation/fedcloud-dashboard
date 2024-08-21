@@ -9,18 +9,16 @@ This code relies on docker-compose to run 3 containers:
 
 - [traefik](https://traefik.io/traefik/) to provide HTTP proxy and cert
   management
-- [dashy](https://dashy.to/) for generating the dashboard
+- [homer](https://homer-demo.netlify.app/) for generating the dashboard
 - some python code to generate the list of endpoints
 
 The existing docker-compose file assumes you will run the code on a publicly
-accessible host with a valid name. You can create a `.env` file with the
-`DASHBOARD_HOSTNAME` variable defined with the hostname of your server and just
-start the service:
+accessible host with a valid name:
 
 ```shell
 cd /path/to/working/directory
 git clone https://github.com/EGI-Federation/fedcloud-dashboard.git
-echo "DASHBOARD_HOSTNAME="<your host name>"
+cd fedcloud-dashboard
 docker-compose up --build
 ```
 
@@ -57,18 +55,18 @@ conda activate horizon-aggregator
 Test whether the query script works:
 
 ```shell
-cd /path/to/working/directory/fedcloud-dashboard/dashboard/
-python dashy_endpoints.py > conf.yml
+cd /path/to/working/directory/fedcloud-dashboard/
+python dashboard/update_config.py > assets/config.yml
 ```
 
 Use the generated `conf.yml` with dashy:
 
 ```shell
-cd /path/to/working/directory/fedcloud-dashboard/dashboard/
+cd /path/to/working/directory/fedcloud-dashboard/
 docker run  \
-       -p 8080:80 \
-       -v  $PWD/conf.yml:/app/public/conf.yml \
-       lissy93/dashy:latest
+       -p 8080:8080 \
+       -v $PWD/assets:/www/assets/ \
+       b4bz/homer:v24.05.1
 ```
 
 And point your browser to `http://localhost:8080` to see your dashboard running

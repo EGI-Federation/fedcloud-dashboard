@@ -19,6 +19,10 @@ CONFIG_TEMPLATE = {
     "subtitle": "FedCloud Dashboards",
     "theme": "classic",
     "columns": "3",
+    "defaults": {
+        "layout": "list",
+        "colorTheme": "auto",
+    },
     "stylesheet": ["assets/egi.css"],
     "colors": {
         "light": {"highlight-hover": "#ef8200", "highlight-secondary": "#005faa"}
