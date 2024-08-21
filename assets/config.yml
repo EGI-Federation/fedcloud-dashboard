@@ -4,8 +4,11 @@ title: "EGI Cloud Compute"
 logo: "assets/egi-logo.svg"
 
 footer: |
-  <p><a href="https://www.egi.eu/service/cloud-compute/">Cloud Compute</a> is a service delivered by the <a href="https://www.egi.eu/egi-infrastructure/">EGI Infrastructure</a> | This dashboard uses <a href="https://github.com/bastienwirtz/homer">Homer</a>
-  </p>
+  <p><a href="https://www.egi.eu/service/cloud-compute/">Cloud Compute</a>
+  is a service delivered by the
+  <a href="https://www.egi.eu/egi-infrastructure/">EGI Infrastructure</a>
+  | This dashboard uses <a href="https://github.com/bastienwirtz/homer">
+  Homer</a></p>
 
 theme: classic
 # Optional custom stylesheet
@@ -33,7 +36,7 @@ links:
     url: "https://docs.egi.eu/providers/cloud-compute/"
     target: "_blank"
 
- Services
+# Services
 services:
   - name: "OpenStack Dashboards"
     icon: "fas fa-cloud"
