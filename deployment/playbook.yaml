@@ -25,6 +25,7 @@
       repo: 'https://github.com/EGI-Federation/fedcloud-dashboard.git'
       version: "{{ git_ref }}"
       dest: /fedcloud-dashboard
+      force: true
 
   - name: service file
     ansible.builtin.copy:
