@@ -15,10 +15,15 @@ theme: classic
 # Will load custom CSS files. Especially useful for custom icon sets.
 stylesheet:
   - "assets/egi.css"
+
 colors:
   light:
     highlight-secondary: "#005faa"
     highlight-hover: "#ef8200"
+
+defaults:
+  layout: list
+  colorTheme: auto
 
 message:
   style: "is-dark" # See https://bulma.io/documentation/components/message/#colors for styling options.

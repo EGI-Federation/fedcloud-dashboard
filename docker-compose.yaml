@@ -1,7 +1,4 @@
-version: "3.3"
-
 services:
-
   traefik:
     image: "traefik:v2.11"
     container_name: "traefik"
@@ -31,7 +28,6 @@ services:
       restart_policy:
         condition: any
 
-
   dashboard:
     image: "b4bz/homer:v24.05.1"
     labels:
@@ -39,18 +35,16 @@ services:
       - "traefik.http.routers.dashboard.rule=HostRegexp(`{any:.+}`)"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
-    volumes:
-      - "/fedcloud-dashboard/assets:/www/assets/"
+    volumes_from:
+      - endpoint_updater
     environment:
-      - INIT_ASSETS=1
+      - INIT_ASSETS=0
     deploy:
       restart_policy:
         condition: any
 
   endpoint_updater:
     build: .
-    volumes:
-      - "/fedcloud-dashboard/assets:/www/assets/"
     deploy:
       restart_policy:
         condition: any
