@@ -4,7 +4,7 @@ FROM python:3.10
 # Do not get picky on exact cron version so ignore DL3008
 # hadolint ignore=DL3008
 RUN apt-get update \
- && apt-get install --no-install-recommends -y cron \
+ && apt-get install --no-install-recommends -y cron tini \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && rm /etc/cron.daily/*
@@ -19,4 +19,9 @@ COPY ./dashboard /fedcloud-dashboard/dashboard
 
 WORKDIR /fedcloud-dashboard
 
+COPY ./assets /www/assets
+
+VOLUME /www/assets
+
+ENTRYPOINT ["tini", "--"]
 CMD ["cron", "-f"]
