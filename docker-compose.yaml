@@ -1,12 +1,9 @@
-version: "3.3"
-
 services:
-
   traefik:
     image: "traefik:v2.11"
     container_name: "traefik"
     command:
-      # - "--log.level=DEBUG"
+#      - "--log.level=DEBUG"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -17,7 +14,7 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+#      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.myresolver.acme.email=enol.fernandez@egi.eu"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
@@ -31,24 +28,23 @@ services:
       restart_policy:
         condition: any
 
-
   dashboard:
-    image: "lissy93/dashy:3.x"
+    image: "b4bz/homer:v24.05.1"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`${DASHBOARD_HOSTNAME}`)"
+      - "traefik.http.routers.dashboard.rule=HostRegexp(`{any:.+}`)"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
-    volumes:
-      - "/fedcloud-dashboard/user-data:/app/user-data/"
+    volumes_from:
+      - endpoint_updater
+    environment:
+      - INIT_ASSETS=0
     deploy:
       restart_policy:
         condition: any
 
   endpoint_updater:
     build: .
-    volumes:
-      - "/fedcloud-dashboard/user-data:/app/user-data/"
     deploy:
       restart_policy:
         condition: any
