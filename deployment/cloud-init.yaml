@@ -18,3 +18,16 @@ users:
   - gh:sebastian-luna-valero
   ssh_authorized_keys:
   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQD3rdgKJj5WWIE5sD+Mup8HxgMQGY7cYwjwGGa4TJAkZMrhDon5MTgFko51xNZuU7pRhOdTQwJqu8Bkb+y2nAtFS3vHij4x4GgHU9TuLwhgiWjB3qhAj959vXg2FItHO8JsjM3a5R/VxX/hSXlEy+7iyHpH1zCi/LwhcFLEd7yTv0bV99yNMoLPQYhGjYQ5DqrWBKyu8ddFxfRzxaiHgFTvBPwa52Gwft7S7N90tV7fHCI8p+9nD57q6aWwTRtxbClJyf2vohSlIB0WqqPKTBy+he7QkV8VRq9zJyUMaelTTUy+nBolF4oyAHJViY9GAvfdEsHKW0FaV0SS4ICKjilQOAyK3uG+Hl26CCLvtWUmbx/XGAwfoCIipMqXwbjLwA2J+dXCaKS4uBz0f4eXKsXXoFmh4awEIOxpdVXUFYV231JxcgMGGhSQvaqla5QWZ93RNNS0v7SEhHKAkG6B8mOS8yyAu1mBCS0Y03p6xT/7lI5QI4cTIVD3HZU6dB2s/Fc= enol@Enols-MacBook-Pro.local
+
+write_files:
+  - content: |
+      # Created by cloud-init according to:
+      #    https://github.com/EGI-Federation/fedcloud-dashboard/blob/main/deployment/cloud-init.yaml
+      #
+      # 1. Access is restricted to members of the vo.cloud.egi.eu VO with the auditor role
+      #    urn:mace:egi.eu:group:cloud.egi.eu:role=auditor#aai.egi.eu
+      #
+      # 2. Once logged in, they have unrestricted sudo power:
+      %egi-eu_cloud-egi-eu ALL=(ALL) NOPASSWD:ALL
+    path: /etc/sudoers.d/motley
+    permissions: '0644'
