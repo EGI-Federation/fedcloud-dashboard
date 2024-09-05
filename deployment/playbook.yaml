@@ -15,8 +15,8 @@
   - role: 'grycap.docker'
     docker_config_values: { "mtu": 1400 }
   - role: 'grycap.motley-cue'
-    ssh_oidc_my_vo: false
-    ssh_oidc_other_vos: cloud.egi.eu
+    ssh_oidc_other_vos_name: cloud.egi.eu
+    ssh_oidc_other_vos_role: auditor
 
 - hosts: all
   become: yes
