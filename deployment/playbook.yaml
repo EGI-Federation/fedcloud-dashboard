@@ -2,58 +2,58 @@
 - hosts: all
   gather_facts: no
   tasks:
-  - name: Wait for ssh
-    # give it some time as the VM may take a while to start
-    wait_for_connection:
-      delay: 30
-      timeout: 600
+    - name: Wait for ssh
+      # give it some time as the VM may take a while to start
+      wait_for_connection:
+        delay: 30
+        timeout: 600
 
 - hosts: all
   become: yes
   gather_facts: yes
   roles:
-  - role: 'grycap.docker'
-    docker_config_values: { "mtu": 1400 }
-  - role: 'grycap.motley-cue'
-    ssh_oidc_other_vos_name: cloud.egi.eu
-    ssh_oidc_other_vos_role: auditor
+    - role: "grycap.docker"
+      docker_config_values: { "mtu": 1400 }
+    - role: "grycap.motley-cue"
+      ssh_oidc_other_vos_name: cloud.egi.eu
+      ssh_oidc_other_vos_role: auditor
 
 - hosts: all
   become: yes
   gather_facts: yes
   tasks:
-  - name: Checkout repo at VM
-    ansible.builtin.git:
-      repo: 'https://github.com/EGI-Federation/fedcloud-dashboard.git'
-      version: "{{ git_ref }}"
-      dest: /fedcloud-dashboard
+    - name: Checkout repo at VM
+      ansible.builtin.git:
+        repo: "https://github.com/EGI-Federation/fedcloud-dashboard.git"
+        version: "{{ git_ref }}"
+        dest: /fedcloud-dashboard
 
-  - name: service file
-    ansible.builtin.copy:
-      content: |
-        #
-        # This manages the cloudkeeper OS backend
-        #
-        [Unit]
-        Description=Dashboard
-        After=docker.service
-        Requires=docker.service
+    - name: service file
+      ansible.builtin.copy:
+        content: |
+          #
+          # This manages the cloudkeeper OS backend
+          #
+          [Unit]
+          Description=Dashboard
+          After=docker.service
+          Requires=docker.service
 
-        [Service]
-        Type=oneshot
-        RemainAfterExit=true
-        WorkingDirectory=/fedcloud-dashboard
-        ExecStartPre=/usr/bin/docker pull python:3.10
-        ExecStart=/usr/bin/docker-compose up -d --force-recreate --build --remove-orphans
-        ExecStop=/usr/bin/docker-compose down
+          [Service]
+          Type=oneshot
+          RemainAfterExit=true
+          WorkingDirectory=/fedcloud-dashboard
+          ExecStartPre=/usr/bin/docker pull python:3.10
+          ExecStart=/usr/bin/docker-compose up -d --force-recreate --build --remove-orphans
+          ExecStop=/usr/bin/docker-compose down
 
-        [Install]
-        WantedBy=multi-user.target
-      dest: /etc/systemd/system/dashboard.service
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/dashboard.service
 
-  - name: Run, baby run
-    ansible.builtin.systemd:
-      name: dashboard.service
-      enabled: yes
-      state: restarted
-      daemon_reload: yes
+    - name: Run, baby run
+      ansible.builtin.systemd:
+        name: dashboard.service
+        enabled: yes
+        state: restarted
+        daemon_reload: yes
