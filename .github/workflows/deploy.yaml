@@ -1,5 +1,5 @@
 ---
-name: 'Deploy'
+name: "Deploy"
 
 on:
   push:
@@ -7,123 +7,123 @@ on:
       - main
   pull_request:
     paths:
-      - 'deployment/**'
+      - "deployment/**"
 
-permissions: 
+permissions:
   pull-requests: write
 
 jobs:
   terraform:
-    name: 'Terraform'
+    name: "Terraform"
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Setup python
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.x
-    - name: Install environment
-      run: |
-        curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > jq
-        chmod +x jq
-        pip install yq ansible git+https://github.com/tdviet/fedcloudclient.git
-        curl -L https://github.com/oidc-mytoken/client/releases/download/v0.5.2/mytoken_0.5.2_linux_64-bit.tar.gz \
-          | tar -xzf -
-        mkdir ~/.mytoken
-        curl https://raw.githubusercontent.com/oidc-mytoken/client/master/config/example-config.yaml \
-          | sed 's/default_provider:/default_provider: "egi"/g' \
-          > ~/.mytoken/config.yaml
-    - name: Configure providers access
-      env:
-        MYTOKEN: ${{ secrets.MYTOKEN }}
-      run: |
-        PATH="$PWD:$PATH"
-        cd deployment
-        ./site-config.sh
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: 1.2.9
-    - name: Terraform Format
-      id: fmt
-      run: |
-        cd deployment
-        terraform fmt -check
-    - name: Terraform init
-      id: init
-      run: |
-        cd deployment
-        terraform init
-    - name: terraform plan
-      id: plan
-      if: github.event_name == 'pull_request'
-      run: |
-        cd deployment
-        terraform plan -no-color -var-file=deploy.tfvars
-      continue-on-error: true
-    - name: Update Pull Request
-      uses: actions/github-script@v7
-      if: github.event_name == 'pull_request'
-      env:
-        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-          <details><summary>Show Plan</summary>
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Install environment
+        run: |
+          curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > jq
+          chmod +x jq
+          pip install yq ansible git+https://github.com/tdviet/fedcloudclient.git
+          curl -L https://github.com/oidc-mytoken/client/releases/download/v0.5.2/mytoken_0.5.2_linux_64-bit.tar.gz \
+            | tar -xzf -
+          mkdir ~/.mytoken
+          curl https://raw.githubusercontent.com/oidc-mytoken/client/master/config/example-config.yaml \
+            | sed 's/default_provider:/default_provider: "egi"/g' \
+            > ~/.mytoken/config.yaml
+      - name: Configure providers access
+        env:
+          MYTOKEN: ${{ secrets.MYTOKEN }}
+        run: |
+          PATH="$PWD:$PATH"
+          cd deployment
+          ./site-config.sh
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.2.9
+      - name: Terraform Format
+        id: fmt
+        run: |
+          cd deployment
+          terraform fmt -check
+      - name: Terraform init
+        id: init
+        run: |
+          cd deployment
+          terraform init
+      - name: terraform plan
+        id: plan
+        if: github.event_name == 'pull_request'
+        run: |
+          cd deployment
+          terraform plan -no-color -var-file=deploy.tfvars
+        continue-on-error: true
+      - name: Update Pull Request
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            <details><summary>Show Plan</summary>
 
-          \`\`\`
-          ${process.env.PLAN}
-          \`\`\`
+            \`\`\`
+            ${process.env.PLAN}
+            \`\`\`
 
-          </details>
+            </details>
 
-          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: output
-          })
-    - name: Terraform Plan Status
-      if: steps.plan.outcome == 'failure'
-      run: exit 1
-    - name: Terraform Apply
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: |
-        cd deployment
-        terraform apply -auto-approve -var-file=deploy.tfvars
-    - name: Get IP
-      id: public_ip
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: |
-        cd deployment
-        terraform output -raw public_ip
-    - name: Update IP in DNS
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      env:
-        NSUPDATE_SECRET: ${{ secrets.NSUPDATE_SECRET }}
-      run: |
-        curl -u "horizon.vm.fedcloud.eu:$NSUPDATE_SECRET" \
-             "https://nsupdate.fedcloud.eu/nic/update?myip=${{ steps.public_ip.outputs.stdout }}"
-    - name: Configure with ansible
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      uses: dawidd6/action-ansible-playbook@v2
-      env:
-        MYTOKEN: ${{ secrets.MYTOKEN }}
-      with:
-        playbook: playbook.yaml
-        directory: ./deployment
-        key: ${{ secrets.SSH_KEY }}
-        inventory: |
-          [all]
-          ${{ steps.public_ip.outputs.stdout }}
-        requirements: galaxy-requirements.yaml
-        options: |
-          --extra-vars ACCESS_TOKEN=$("$PWD"/mytoken AT --MT-env MYTOKEN)
-          --extra-vars git_ref=${{ github.sha }}
-          --ssh-common-args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
-          -u egi
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          cd deployment
+          terraform apply -auto-approve -var-file=deploy.tfvars
+      - name: Get IP
+        id: public_ip
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          cd deployment
+          terraform output -raw public_ip
+      - name: Update IP in DNS
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          NSUPDATE_SECRET: ${{ secrets.NSUPDATE_SECRET }}
+        run: |
+          curl -u "horizon.vm.fedcloud.eu:$NSUPDATE_SECRET" \
+               "https://nsupdate.fedcloud.eu/nic/update?myip=${{ steps.public_ip.outputs.stdout }}"
+      - name: Configure with ansible
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: dawidd6/action-ansible-playbook@v2
+        env:
+          MYTOKEN: ${{ secrets.MYTOKEN }}
+        with:
+          playbook: playbook.yaml
+          directory: ./deployment
+          key: ${{ secrets.SSH_KEY }}
+          inventory: |
+            [all]
+            ${{ steps.public_ip.outputs.stdout }}
+          requirements: galaxy-requirements.yaml
+          options: |
+            --extra-vars ACCESS_TOKEN=$("$PWD"/mytoken AT --MT-env MYTOKEN)
+            --extra-vars git_ref=${{ github.sha }}
+            --ssh-common-args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+            -u egi
