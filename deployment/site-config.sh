@@ -38,7 +38,6 @@ dump_config backend \
 	"$(yq -r .clouds.backend.vo config.yaml)" \
 	"$OIDC_TOKEN" >>tmp-clouds.yaml
 
-
 dump_config deploy \
 	"$(yq -r .clouds.deploy.site config.yaml)" \
 	"$(yq -r .clouds.deploy.vo config.yaml)" \
