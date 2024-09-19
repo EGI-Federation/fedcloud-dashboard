@@ -31,10 +31,13 @@ EOF
 
 rm -f clouds.yaml
 echo "clouds:" >tmp-clouds.yaml
+
+# shellcheck disable=SC2153
 dump_config backend \
 	"$(yq -r .clouds.backend.site config.yaml)" \
 	"$(yq -r .clouds.backend.vo config.yaml)" \
 	"$OIDC_TOKEN" >>tmp-clouds.yaml
+
 
 dump_config deploy \
 	"$(yq -r .clouds.deploy.site config.yaml)" \
