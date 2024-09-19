@@ -24,6 +24,8 @@ jobs:
         with:
           python-version: 3.x
       - name: Install environment
+        env:
+          MYTOKEN: ${{ secrets.MYTOKEN }}
         run: |
           curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > jq
           chmod +x jq
