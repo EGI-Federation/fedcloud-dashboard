@@ -37,7 +37,7 @@ jobs:
           # add PWD to the PATH
           echo "$PWD" >> "$GITHUB_PATH"
           # add OIDC access token to ENV
-          OIDC_TOKEN=$(mytoken AT --MT-env MYTOKEN)
+          OIDC_TOKEN=$(./mytoken AT --MT-env MYTOKEN)
           echo "::add-mask::$OIDC_TOKEN"
           echo "OIDC_TOKEN=$OIDC_TOKEN" >> "$GITHUB_ENV"
       - name: Configure providers access
