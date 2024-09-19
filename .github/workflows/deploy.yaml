@@ -112,6 +112,8 @@ jobs:
     - name: Configure with ansible
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       uses: dawidd6/action-ansible-playbook@v2
+      env:
+        MYTOKEN: ${{ secrets.MYTOKEN }}
       with:
         playbook: playbook.yaml
         directory: ./deployment
@@ -121,6 +123,7 @@ jobs:
           ${{ steps.public_ip.outputs.stdout }}
         requirements: galaxy-requirements.yaml
         options: |
+          --extra-vars ACCESS_TOKEN=$("$PWD"/mytoken AT --MT-env MYTOKEN)
           --extra-vars git_ref=${{ github.sha }}
           --ssh-common-args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
           -u egi
