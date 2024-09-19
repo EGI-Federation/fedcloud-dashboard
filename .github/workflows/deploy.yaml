@@ -36,9 +36,12 @@ jobs:
             > ~/.mytoken/config.yaml
           # add PWD to the PATH
           echo "$PWD" >> "$GITHUB_PATH"
+          # add OIDC access token to ENV
+          OIDC_TOKEN=$(mytoken AT --MT-env MYTOKEN)
+          echo "::add-mask::$OIDC_TOKEN"
+          echo "OIDC_TOKEN=$OIDC_TOKEN" >> "$GITHUB_ENV"
       - name: Configure providers access
         env:
-          MYTOKEN: ${{ secrets.MYTOKEN }}
         run: |
           cd deployment
           ./site-config.sh
@@ -113,8 +116,6 @@ jobs:
       - name: Configure with ansible
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: dawidd6/action-ansible-playbook@v2
-        env:
-          MYTOKEN: ${{ secrets.MYTOKEN }}
         with:
           playbook: playbook.yaml
           directory: ./deployment
@@ -124,7 +125,7 @@ jobs:
             ${{ steps.public_ip.outputs.stdout }}
           requirements: galaxy-requirements.yaml
           options: |
-            --extra-vars ACCESS_TOKEN="$(mytoken AT --MT-env MYTOKEN)"
+            --extra-vars ACCESS_TOKEN=${{ env.OIDC_TOKEN }}
             --extra-vars git_ref=${{ github.sha }}
             --ssh-common-args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
             -u egi

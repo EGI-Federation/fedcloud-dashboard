@@ -27,9 +27,7 @@ dump_config() {
 EOF
 }
 
-OIDC_TOKEN=$(mytoken AT --MT-env MYTOKEN)
-
-echo "::add-mask::$OIDC_TOKEN"
+# using OIDC_TOKEN generated in .github/workflows/deploy.yaml
 
 rm -f clouds.yaml
 echo "clouds:" > tmp-clouds.yaml
