@@ -41,7 +41,6 @@ jobs:
           echo "::add-mask::$OIDC_TOKEN"
           echo "OIDC_TOKEN=$OIDC_TOKEN" >> "$GITHUB_ENV"
       - name: Configure providers access
-        env:
         run: |
           cd deployment
           ./site-config.sh
