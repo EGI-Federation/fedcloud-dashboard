@@ -14,43 +14,43 @@
   roles:
     - role: "grycap.docker"
       docker_config_values: { "mtu": 1400 }
-    - role: "grycap.motley_cue"
-      ssh_oidc_other_vos_name: cloud.egi.eu
-      ssh_oidc_other_vos_role: auditor
+#    - role: "grycap.motley_cue"
+#      ssh_oidc_other_vos_name: cloud.egi.eu
+#      ssh_oidc_other_vos_role: auditor
 
 - hosts: all
   become: yes
   gather_facts: yes
   tasks:
-    - name: Disable default site in nginx
-      ansible.builtin.file:
-        path: /etc/nginx/sites-enabled/default
-        state: absent
-
-    - name: Move motley-cue to a different port (nginx)
-      ansible.builtin.lineinfile:
-        path: /etc/nginx/sites-available/nginx.motley_cue
-        search_string: "8080;"
-        line: 8181;
-
-    - name: Move motley-cue to a different port (pam-ssh-oidc)
-      ansible.builtin.lineinfile:
-        path: /etc/pam.d/pam-ssh-oidc-config.ini
-        search_string: "http://localhost:8080/verify_user"
-        line: http://localhost:8181/verify_user
-
-    - name: Restart nginx
-      ansible.builtin.service:
-        name: nginx
-        state: restarted
-        enabled: yes
-
-    - name: Restart motley-cue
-      ansible.builtin.service:
-        name: motley-cue
-        state: restarted
-        enabled: yes
-
+#    - name: Disable default site in nginx
+#      ansible.builtin.file:
+#        path: /etc/nginx/sites-enabled/default
+#        state: absent
+#
+#    - name: Move motley-cue to a different port (nginx)
+#      ansible.builtin.lineinfile:
+#        path: /etc/nginx/sites-available/nginx.motley_cue
+#        regexp: ".*listen 8080;$"
+#        line: "    listen 8181;"
+#
+#    - name: Move motley-cue to a different port (pam-ssh-oidc)
+#      ansible.builtin.lineinfile:
+#        path: /etc/pam.d/pam-ssh-oidc-config.ini
+#        search_string: "http://localhost:8080/verify_user"
+#        line: http://localhost:8181/verify_user
+#
+#    - name: Restart nginx
+#      ansible.builtin.service:
+#        name: nginx
+#        state: restarted
+#        enabled: yes
+#
+#    - name: Restart motley-cue
+#      ansible.builtin.service:
+#        name: motley-cue
+#        state: restarted
+#        enabled: yes
+#
     - name: Checkout repo at VM
       ansible.builtin.git:
         repo: "https://github.com/EGI-Federation/fedcloud-dashboard.git"
