@@ -13,12 +13,14 @@ This code relies on docker-compose to run 3 containers:
 - some python code to generate the list of endpoints
 
 The existing docker-compose file assumes you will run the code on a publicly
-accessible host with a valid name:
+accessible host with a valid name. You can create a `.env` file with the
+`DASHBOARD_HOSTNAME` variable defined with the hostname of your server and just
+start the service:
 
 ```shell
 cd /path/to/working/directory
 git clone https://github.com/EGI-Federation/fedcloud-dashboard.git
-cd fedcloud-dashboard
+echo "DASHBOARD_HOSTNAME="<your host name>" > .env
 docker-compose up --build
 ```
 
