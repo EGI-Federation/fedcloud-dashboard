@@ -20,7 +20,7 @@ start the service:
 ```shell
 cd /path/to/working/directory
 git clone https://github.com/EGI-Federation/fedcloud-dashboard.git
-echo "DASHBOARD_HOSTNAME="<your host name>"
+echo "DASHBOARD_HOSTNAME="<your host name>" > .env
 docker-compose up --build
 ```
 
