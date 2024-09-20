@@ -33,8 +33,8 @@ resource "openstack_compute_secgroup_v2" "motley" {
   description = "Open access via ssh-oidc"
 
   rule {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 8181
+    to_port     = 8181
     ip_protocol = "tcp"
     cidr        = "0.0.0.0/0"
   }

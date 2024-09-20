@@ -22,6 +22,28 @@
   become: yes
   gather_facts: yes
   tasks:
+    - name: Disable default site in nginx
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Move motley-cue to a different port (nginx)
+      ansible.builtin.lineinfile:
+        path: /etc/nginx/sites-available/nginx.motley_cue
+        search_string: "8080;"
+        line: 8181;
+
+    - name: Move motley-cue to a different port (pam-ssh-oidc)
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/pam-ssh-oidc-config.ini
+        search_string: "http://localhost:8080/verify_user"
+        line: http://localhost:8181/verify_user
+
+    - name: Restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+
     - name: Checkout repo at VM
       ansible.builtin.git:
         repo: "https://github.com/EGI-Federation/fedcloud-dashboard.git"
