@@ -43,6 +43,13 @@
       ansible.builtin.service:
         name: nginx
         state: restarted
+        enabled: yes
+
+    - name: Restart motley-cue
+      ansible.builtin.service:
+        name: motley-cue
+        state: restarted
+        enabled: yes
 
     - name: Checkout repo at VM
       ansible.builtin.git:
