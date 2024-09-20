@@ -28,6 +28,12 @@
         version: "{{ git_ref }}"
         dest: /fedcloud-dashboard
 
+    - name: env file
+      ansible.builtin.copy:
+        content: |
+          DASHBOARD_HOSTNAME=dashboard.cloud.egi.eu
+        dest: /fedcloud-dashboard/.env
+
     - name: service file
       ansible.builtin.copy:
         content: |
@@ -38,7 +44,6 @@
           Description=Dashboard
           After=docker.service
           Requires=docker.service
-
           [Service]
           Type=oneshot
           RemainAfterExit=true
