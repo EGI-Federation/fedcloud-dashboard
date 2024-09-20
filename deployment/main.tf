@@ -6,7 +6,7 @@ resource "openstack_compute_instance_v2" "dashboard" {
   network {
     uuid = var.net_id
   }
-  security_groups = ["default", "HTTP", "motley-cue"]
+  security_groups = ["HTTP", "motley-cue"]
 }
 
 resource "openstack_compute_secgroup_v2" "secgroup" {
@@ -31,6 +31,13 @@ resource "openstack_compute_secgroup_v2" "secgroup" {
 resource "openstack_compute_secgroup_v2" "motley" {
   name        = "motley-cue"
   description = "Open access via ssh-oidc"
+
+  rule {
+    from_port   = 22
+    to_port     = 22
+    ip_protocol = "tcp"
+    cidr        = "0.0.0.0/0"
+  }
 
   rule {
     from_port   = 8181
