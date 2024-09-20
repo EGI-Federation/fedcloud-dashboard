@@ -32,7 +32,7 @@ services:
     image: "b4bz/homer:v24.05.1"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=HostRegexp(`{any:.+}`)"
+      - "traefik.http.routers.dashboard.rule=Host(`${DASHBOARD_HOSTNAME}`)"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
     volumes_from:
