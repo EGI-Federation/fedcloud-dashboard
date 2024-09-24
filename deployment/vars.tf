@@ -8,9 +8,12 @@ variable "ip_pool" {
   description = "The floating ip pool"
 }
 
-variable "image_id" {
-  type        = string
-  description = "VM image id"
+# https://appdb.egi.eu/store/vappliance/egi.docker
+data "openstack_images_image_v2" "egi-docker" {
+  most_recent = true
+  properties = {
+    "ad:appid" = "1006"
+  }
 }
 
 variable "flavor_id" {
