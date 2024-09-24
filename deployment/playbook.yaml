@@ -12,8 +12,6 @@
   become: yes
   gather_facts: yes
   roles:
-    - role: "grycap.docker"
-      docker_config_values: { "mtu": 1400 }
     - role: "grycap.motley_cue"
       ssh_oidc_other_vos_name: cloud.egi.eu
       ssh_oidc_other_vos_role: auditor
@@ -30,14 +28,20 @@
     - name: Move motley-cue to a different port (nginx)
       ansible.builtin.lineinfile:
         path: /etc/nginx/sites-available/nginx.motley_cue
-        search_string: "8080;"
-        line: 8181;
+        regexp: ".*listen 8080;$"
+        line: "    listen 8181;"
+
+    - name: No IPv6 for motley-cue (nginx)
+      ansible.builtin.lineinfile:
+        path: /etc/nginx/sites-available/nginx.motley_cue
+        search_string: "listen [::]:8080;"
+        state: absent
 
     - name: Move motley-cue to a different port (pam-ssh-oidc)
       ansible.builtin.lineinfile:
         path: /etc/pam.d/pam-ssh-oidc-config.ini
-        search_string: "http://localhost:8080/verify_user"
-        line: http://localhost:8181/verify_user
+        regexp: "^verify_endpoint = http://localhost:8080/verify_user$"
+        line: "verify_endpoint = http://localhost:8181/verify_user"
 
     - name: Restart nginx
       ansible.builtin.service:

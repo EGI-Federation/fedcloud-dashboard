@@ -1,6 +1,6 @@
 resource "openstack_compute_instance_v2" "dashboard" {
   name      = "dashboard"
-  image_id  = var.image_id
+  image_id  = data.openstack_images_image_v2.egi-docker.id
   flavor_id = var.flavor_id
   user_data = file("cloud-init.yaml")
   network {
