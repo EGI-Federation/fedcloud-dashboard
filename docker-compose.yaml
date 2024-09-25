@@ -49,6 +49,24 @@ services:
       restart_policy:
         condition: any
 
+  # Reuse certbot certificates with motle-cue
+  # https://github.com/ldez/traefik-certs-dumper
+  traefik-certs-dumper:
+    image: ldez/traefik-certs-dumper:v2.8.1
+    container_name: traefik-certs-dumper
+    entrypoint: sh -c '
+      apk add jq
+      ; while ! [ -e /letsencrypt/acme.json ]
+      || ! [ `jq ".[] | .Certificates | length" /letsencrypt/acme.json` != 0 ]; do
+      sleep 1
+      ; done
+      && traefik-certs-dumper file --version v2 --watch
+        --source /letsencrypt/acme.json --dest /letsencrypt/certs'
+    labels:
+      traefik.enable: false
+    volumes_from:
+      - traefik
+
 networks:
   default:
     driver: bridge
