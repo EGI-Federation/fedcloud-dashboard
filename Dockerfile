@@ -23,5 +23,7 @@ COPY ./assets /www/assets
 
 VOLUME /www/assets
 
+RUN python /fedcloud-dashboard/dashboard/update_config.py > /www/assets/config.yml
+
 ENTRYPOINT ["tini", "--"]
 CMD ["cron", "-f"]
