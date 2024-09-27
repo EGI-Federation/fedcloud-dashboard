@@ -1,0 +1,5 @@
+[user_verification]
+; if local is set to false then user verification is based upon verify_endpoint.
+; This could be the motley-cue endpoint
+local = false
+verify_endpoint = https://{{ fedcloud_dashboard_dns }}:8443/verify_user

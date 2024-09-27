@@ -1,0 +1,20 @@
+server {
+    # # if you uncomment this block, make sure you remove the two directives above
+    # # also consider uncommenting the server block above for port 80 redirects to 443
+    # # alternatively, you could use port 8443 instead of 443, as this port is also
+    # # checked by default by the mccli client software.
+    listen 8443 ssl;
+    ssl_certificate /fedcloud-dashboard/letsencrypt/certs/certs/{{ fedcloud_dashboard_dns }}.crt;
+    ssl_certificate_key /fedcloud-dashboard/letsencrypt/certs/private/{{ fedcloud_dashboard_dns }}.key;
+
+    server_name _;
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host $http_host;
+        # we don't want nginx trying to do something clever with
+        # redirects, we set the Host: header above already.
+        proxy_redirect off;
+        proxy_pass http://unix:/run/motley_cue/motley-cue.sock;
+    }
+}

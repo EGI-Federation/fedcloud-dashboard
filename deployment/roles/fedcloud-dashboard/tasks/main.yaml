@@ -1,0 +1,65 @@
+
+- name: Checkout repo at VM
+  ansible.builtin.git:
+    repo: "https://github.com/EGI-Federation/fedcloud-dashboard.git"
+    #version: "{{ git_ref }}"
+    version: motley-https
+    dest: /fedcloud-dashboard
+
+- name: env file
+  ansible.builtin.copy:
+    content: |
+      DASHBOARD_HOSTNAME={{ fedcloud_dashboard_dns }}
+    dest: /fedcloud-dashboard/.env
+
+- name: service file
+  ansible.builtin.copy:
+    content: |
+      #
+      # This manages the cloudkeeper OS backend
+      #
+      [Unit]
+      Description=Dashboard
+      After=docker.service
+      Requires=docker.service
+      [Service]
+      Type=oneshot
+      RemainAfterExit=true
+      WorkingDirectory=/fedcloud-dashboard
+      ExecStartPre=/usr/bin/docker pull python:3.10
+      ExecStart=/usr/bin/docker-compose up -d --force-recreate --build --remove-orphans
+      ExecStop=/usr/bin/docker-compose down
+
+      [Install]
+      WantedBy=multi-user.target
+    dest: /etc/systemd/system/dashboard.service
+
+- name: Run, baby run
+  ansible.builtin.systemd:
+    name: dashboard.service
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
+
+- name: Wait until the letsencrypt cert is available
+  ansible.builtin.wait_for:
+    path: /fedcloud-dashboard/letsencrypt/acme.json
+    search_regex: certificate
+
+- name: Disable default site in nginx
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Restart nginx
+
+- name: Move motley-cue to a different port (nginx)
+  ansible.builtin.template:
+    src: nginx.motley_cue.j2
+    dest: /etc/nginx/sites-available/nginx.motley_cue
+  notify: Restart nginx
+
+- name: Move motley-cue to a different port (pam-ssh-oidc)
+  ansible.builtin.template:
+    src: pam-ssh-oidc-config.ini.j2
+    dest: /etc/pam.d/pam-ssh-oidc-config.ini
+  notify: Restart motley-cue
