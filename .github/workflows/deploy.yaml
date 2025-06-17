@@ -116,7 +116,7 @@ jobs:
                "https://nsupdate.fedcloud.eu/nic/update?myip=${{ steps.public_ip.outputs.stdout }}"
       - name: Configure with ansible
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: dawidd6/action-ansible-playbook@v3
+        uses: dawidd6/action-ansible-playbook@v4
         with:
           playbook: playbook.yaml
           directory: ./deployment
