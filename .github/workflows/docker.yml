@@ -6,7 +6,7 @@ permissions: read-all
 on:
   push:
     branches:
-    - main
+      - main
   pull_request:
 
 jobs:
