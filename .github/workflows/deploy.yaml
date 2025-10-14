@@ -27,6 +27,7 @@ jobs:
         run: |
           curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > jq
           chmod +x jq
+          pip install yq ansible git+https://github.com/tdviet/fedcloudclient.git
           # add PWD to the PATH
           echo "$PWD" >> "$GITHUB_PATH"
       - name: Configure providers access
@@ -44,6 +45,7 @@ jobs:
                             -d "grant_type=client_credentials&client_id=$CLIENT_ID&scope=$SCOPE&client_secret=$CLIENT_SECRET" \
                           | jq -r ".access_token")
           echo "::add-mask::$OIDC_TOKEN"
+          echo "OIDC_TOKEN=$OIDC_TOKEN" >> "$GITHUB_ENV"
           cd deployment
           ./site-config.sh
       - name: Setup Terraform
