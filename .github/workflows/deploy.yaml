@@ -27,7 +27,7 @@ jobs:
         run: |
           curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > jq
           chmod +x jq
-          pip install yq ansible git+https://github.com/tdviet/fedcloudclient.git
+          pip install yq ansible fedcloudclient
           # add PWD to the PATH
           echo "$PWD" >> "$GITHUB_PATH"
       - name: Configure providers access
