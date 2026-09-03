@@ -107,6 +107,7 @@ def find_endpoints(service_type, production=True, monitored=True):
                     continue
             os_url = sp.find("URL").text
             ep_site = sp.find("SITENAME").text
+            hostname = sp.find("HOSTNAME").text
             if ep_site not in sites:
                 continue
             # os_url = urlparse.urlparse(sp.find('URL').text)
@@ -119,6 +120,7 @@ def find_endpoints(service_type, production=True, monitored=True):
                     os_url,
                     sites[ep_site]["country"],
                     sites[ep_site]["country_code"],
+                    hostname,
                 ]
             )
     else:
@@ -141,7 +143,7 @@ def main():
                 {
                     "name": s[0],
                     "logo": "assets/icons/openstack.png",
-                    "subtitle": f"{s[3]} ({s[4]})",
+                    "subtitle": f"{s[5]} - {s[3]} ({s[4]})",
                     "tag": s[4],
                     "target": "_blank",
                     "url": s[2],
